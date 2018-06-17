@@ -1,0 +1,2 @@
+//Materialize Initialize    
+M.AutoInit();

@@ -1,0 +1,45 @@
+/*CUSTOM CSS*/
+
+/*Mank Sans*/
+@font-face
+{
+    font-family: 'MankSans';
+    src: url('../fonts/mank_sans/manksans.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face
+{
+    font-family: 'MankSansMedium';
+    src: url('../fonts/mank_sans/manksans-medium.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html{
+    font-family: 'MankSansMedium';
+    font-size: 20px;
+}
+
+body
+{
+    background-color: rgba(0,0,0,0.2);
+}
+
+/*Coisas do Materialize*/
+p{
+    font-weight: 600;
+}
+.sidenav
+{
+    font-family: Helvetica, sans-serif;
+}
+.opacity {
+    background: #000;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    opacity: .8;
+}
+.parallax-container {
+    height: 500px;
+}
+
