@@ -1,3 +1,13 @@
+<?php
+
+session_start();
+if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "professor"){
+    header("location: ../../../index.php?error=1");
+}
+
+
+?>
+
 <!DOCTYPE html>
   <html>
     <head>

@@ -62,6 +62,5 @@
       <script type="text/javascript" src="libs/materialize/js/materialize.js"></script>
       <script type="text/javascript" src="libs/materialize/js/jscustom.js"></script>
       <script type="text/javascript" src="libs/jquery.js"></script>
-    <script type="text/javascript" src="libs/validacoes_java/login.js"></script>
     </body>
   </html>

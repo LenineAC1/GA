@@ -19,24 +19,27 @@ if($_POST) {
 
         $login_senha = $inputs_loginSC['login_senha'];
 
-        $query = $conexao_pdo->prepare("select EMAIL, SENHA from user where EMAIL = '$login_email' and SENHA = '$login_senha'");
+        $query = $conexao_pdo->prepare("select EMAIL, SENHA, TIPO from user where EMAIL = '$login_email' and SENHA = '$login_senha'");
 
         $query->execute();
 
         $queryResult = $query->fetch(PDO::FETCH_ASSOC);
 
         if(count($queryResult) > 1){
+
             $_SESSION['session_login'] = $login_email;
-            header("location: ../../../app/view/schedulingPage/schedulingPage.php");
+            $_SESSION['session_tipo'] = $queryResult['TIPO'];
+
+            if($queryResult['TIPO'] == "coordenador"){
+                header("location: ../../../app/view/pgCoord/pgCoord.php");
+            }else if($queryResult['TIPO'] == "professor"){
+                header("location: ../../../app/view/pgProfessor/pgProfessor.php");
+            }
+
         }else{
             header("location: ../../../index.php?error=1");
         }
 
-
-
-        var_dump($queryResult);
-
-        var_dump($inputs_loginSC);
 
     }else{
         header("location: ../../../index.php?error=1");
