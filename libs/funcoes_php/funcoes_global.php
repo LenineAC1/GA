@@ -35,4 +35,5 @@ function remover_caracteres($string)
 }
 //Fim: Tirar caracteres especiais
 
+
 ?>

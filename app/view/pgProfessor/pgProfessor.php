@@ -1,10 +1,11 @@
 <?php
+$raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
+
 
 session_start();
 if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "professor"){
-    header("location: ../../../index.php?error=1");
+    header("location: $raiz/index.php?error=1");
 }
-
 
 ?>
 
@@ -14,9 +15,9 @@ if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "professor"){
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="../../../libs/materialize/css/materialize.css"  media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="<?=$raiz?>/libs/materialize/css/materialize.css"  media="screen,projection"/>
       <!--Import custom.css-->
-      <link type="text/css" rel="stylesheet" href="../../../libs/materialize/css/custom.css"  media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="<?=$raiz?>/libs/materialize/css/custom.css"  media="screen,projection"/>
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -66,8 +67,8 @@ if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "professor"){
     </footer>
 
       <!--JavaScript at end of body for optimized loading-->
-      <script type="text/javascript" src="../../../libs/materialize/js/materialize.min.js"></script>
-      <script type="text/javascript" src="../../../libs/materialize/js/jscustom.js"></script>
-      <script type="text/javascript" src="../../../libs/jquery.js"></script>
+      <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.min.js"></script>
+      <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/jscustom.js"></script>
+      <script type="text/javascript" src="<?=$raiz?>/libs/jquery.js"></script>
     </body>
   </html>
