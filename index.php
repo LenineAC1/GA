@@ -23,6 +23,7 @@
               <div class="card-stacked">
                 <div class="card-content">
                   <h4>Login:</h4>
+                  <!--Substituir no action do form abaixo (libs/validacoes/login/validacao_login.php)-->
                   <form method="post" action="libs/validacoes/login/validacao_login.php" class="col s12"">
                     <div class="row">
                       <div class="input-field col s12">
@@ -59,8 +60,8 @@
     </footer>
 
       <!--JavaScript at end of body for optimized loading-->
+      <script type="text/javascript" src="libs/jquery.js"></script>
       <script type="text/javascript" src="libs/materialize/js/materialize.js"></script>
       <script type="text/javascript" src="libs/materialize/js/jscustom.js"></script>
-      <script type="text/javascript" src="libs/jquery.js"></script>
     </body>
   </html>

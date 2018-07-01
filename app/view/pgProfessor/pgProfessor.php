@@ -66,8 +66,8 @@ if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "professor"){
     </footer>
 
       <!--JavaScript at end of body for optimized loading-->
-      <script type="text/javascript" src="../../../libs/materialize/js/materialize.min.js"></script>
-      <script type="text/javascript" src="../../../libs/materialize/js/jscustom.js"></script>
-      <script type="text/javascript" src="../../../libs/jquery.js"></script>
+      <script type="text/javascript" src="../../libs/jquery.js"></script>
+      <script type="text/javascript" src="../../libs/materialize/js/materialize.min.js"></script>
+      <script type="text/javascript" src="../../libs/materialize/js/jscustom.js"></script>
     </body>
   </html>

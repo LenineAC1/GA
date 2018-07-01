@@ -25,14 +25,36 @@ body
 {
     background-color: rgba(0,0,0,0.2);
 }
+/*Coisas da Area de controle*/
+iframe
+{
+    width: 98%;
+    height: 72vh;
+    border: 1px solid rgba(100,100,100,0.3);
+}
 
 /*Coisas do Materialize*/
 p{
     font-weight: 600;
 }
+.collapsible i
+{
+    font-size: 28px;
+} 
+.collapsible .collapsible-header
+{
+    line-height: 2;
+}
+.collapsible
+{
+    font-family: Helvetica, sans-serif;
+    font-weight: 100;
+    font-size: 14px;
+}
 .sidenav
 {
     font-family: Helvetica, sans-serif;
+    overflow: hidden;
 }
 .opacity {
     background: #000;
