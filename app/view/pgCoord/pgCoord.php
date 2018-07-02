@@ -48,17 +48,16 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
       
     <ul id="slide-out" class="sidenav sidenav-fixed">
       <li class="center red darken-3">
-          <a href="#"><img src="../_img/logoGA.png" style="height: 15px;"></a>
+          <a href="#"><img src="../_img/logoGA.png" style="height: 50px;"></a>
       </li>
       <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
-      <li><a class="modal-trigger" href="#modalNotf"><span class="new badge red darken-3">1</span>NOTIFICAÇÕES</a></li>
-
-      <div class="divider"></div>
+      <li><a class="modal-trigger" href="#modalNotf"><span class="new badge red darken-3" data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
 
       <li><a href="#cont?tipo=1&num=1">HISTÓRICO DE AGENDAMENTOS</a></li>
 
+      <div class="divider"></div>
+
       <ul class="collapsible">
-        <div class="divider"></div>
         <li>
           <div class="collapsible-header valign-wrapper"><i class="material-icons">computer</i>LABORATÓRIOS DE INFORMÁTICA</div>
           <div class="collapsible-body">
@@ -70,7 +69,6 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
             </ul>
           </div>
         </li>
-        <div class="divider"></div>
         <li>
           <div class="collapsible-header valign-wrapper"><i class="tiny material-icons">bubble_chart</i>LABORATÓRIOS DE QUÍMICA</div>
           <div class="collapsible-body">
@@ -80,7 +78,6 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
             </ul>
           </div>
         </li>
-        <div class="divider"></div>
         <li>
           <div class="collapsible-header valign-wrapper"><i class="material-icons">restaurant</i>LABORATÓRIOS DE NUTRIÇÃO E DIETÉTICA</div>
           <div class="collapsible-body">
@@ -90,7 +87,6 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
             </ul>
           </div>
         </li>
-        <div class="divider"></div>
         <li>
           <div class="collapsible-header valign-wrapper "><i class="material-icons">local_florist</i>LABORATÓRIOS DE MEIO AMBIENTE</div>
           <div class="collapsible-body">
@@ -99,8 +95,12 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
             </ul>
           </div>
         </li>
-        <div class="divider"></div>
       </ul>
+
+      <!--BOTÃO DE SAIR-->
+      <div class="divider"></div>
+      <li><a href="#cont?tipo=1&num=1"><i class="material-icons">close</i>SAIR</a></li>
+
     </ul>
 
     <div class="row center">
