@@ -1,15 +1,19 @@
 <?php
 session_start(); //Inicia sessão
+
 if(isset($_SESSION['erro_login']) && $_SESSION['erro_login'] === 1){ // checa se teve erro anteriormente
     // TRATE A MODAL DE ERRO AQUI
 
     //---
     $_SESSION['erro_login'] = 0; // reseta sessão de erro para evitar loop
   }
+
+
 if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de login
     $tipo_conta = $_SESSION['session_tipo']; //Pega o tipo de conta
     if ($tipo_conta == "coordenador") { //Testa se é do tipo coordenador
         header("location: app/view/pgCoord/pgCoord.php"); //Redireciona para pagina de coordenador
+
     } else if ($tipo_conta == "professor") { //Testa se é do tipo professor
         header("location: app/view/pgProfessor/pgProfessor.php"); //Redireciona para pagina de professor
       }
@@ -26,12 +30,12 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
       <!--Import custom.css-->
       <link type="text/css" rel="stylesheet" href="libs/materialize/css/custom.css" media="screen,projection"/>
 
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
 
-    <body>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
 
+<body>
       <?php require 'app/view/head.php'; ?>
 
       <main>
