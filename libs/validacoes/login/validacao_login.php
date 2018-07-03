@@ -1,5 +1,5 @@
 <?php
-
+$raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 require_once '../../funcoes_php/funcoes_global.php';
 session_start(); //Inicia sessão
 if (isset($_POST)) { //Verifica se o post foi enviado(evitar erros)
@@ -29,24 +29,24 @@ if (isset($_POST)) { //Verifica se o post foi enviado(evitar erros)
             $_SESSION['session_tipo'] = $queryResult['TIPO']; // salva tipo da conta realizado em uma sessão para uso posterior
 
             if ($queryResult['TIPO'] == "coordenador") {// checa se tipo da conta é de coordenador
-                header("location: ../../../app/view/pgCoord/pgCoord.php");// redireciona para pagina de coordenador
+                header("location: $raiz/app/view/pgCoord/pgCoord.php");// redireciona para pagina de coordenador
             } else if ($queryResult['TIPO'] == "professor") {// checa se tipo da conta é de professor
-                header("location: ../../../app/view/pgProfessor/pgProfessor.php");// redireciona para pagina de coordenador
+                header("location: $raiz/app/view/pgProfessor/pgProfessor.php");// redireciona para pagina de coordenador
             }
 
         } else {// caso não encontre resultados da query retorna para index com uma sessão de erro
-            header("location: ../../../index.php");
+            header("location: $raiz");
             $_SESSION['erro_login'] = 1;
         }
 
 
     } else { // caso os campos não estajam devidamente preenchidos retorna para index com uma sessão de erro
-        header("location: ../../../index.php");
+        header("location: $raiz");
         $_SESSION['erro_login'] = 1;
     }
 
 } else { // caso não receba o POST retorna para index com uma sessão de erro
-    header("location: ../../../index.php");
+    header("location: $raiz");
     $_SESSION['erro_login'] = 1;
 }
 

@@ -1,14 +1,5 @@
 <?php
 session_start(); //Inicia sessão
-
-if(isset($_SESSION['erro_login']) && $_SESSION['erro_login'] === 1){ // checa se teve erro anteriormente
-    // TRATE A MODAL DE ERRO AQUI
-
-    //---
-    $_SESSION['erro_login'] = 0; // reseta sessão de erro para evitar loop
-  }
-
-
 if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de login
     $tipo_conta = $_SESSION['session_tipo']; //Pega o tipo de conta
     if ($tipo_conta == "coordenador") { //Testa se é do tipo coordenador
@@ -23,6 +14,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
     <!DOCTYPE html>
     <html>
     <head>
+
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
@@ -79,7 +71,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
 
     
   <!-- Modal Erro -->
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+  <a class="waves-effect waves-light btn modal-trigger" id="abrir_modal" href="#modalErro" style="display: none;">Modal</a>
 
   <!-- Modal Erro Structure -->
   <div id="modalErro" class="modal">
@@ -93,8 +85,6 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
     </div>
   </div>
-          
-
   </main>
   <footer>
   </footer>
@@ -102,11 +92,21 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
   <script type="text/javascript" src="libs/materialize/js/materialize.js"></script>
   <script type="text/javascript" src="libs/materialize/js/jscustom.js"></script>
   <script type="text/javascript" src="libs/jquery.js"></script>
+
+      <?php
+      if(isset($_SESSION['erro_login']) && $_SESSION['erro_login'] === 1){ // checa se teve erro anteriormente
+          // TRATE A MODAL DE ERRO AQUI
+            echo '<script type="text/javascript"> document.getElementById(\'abrir_modal\').click(); </script>';
+          //---
+          $_SESSION['erro_login'] = 0; // reseta sessão de erro para evitar loop
+      }
+      ?>
+
   <script type="text/javascript">
    $(document).ready(function(){
-    $('.sidenav').sidenav();
-    $('.collapsible').collapsible();
-    $('.modal').modal();
+       $('.sidenav').sidenav();
+       $('.collapsible').collapsible();
+       $('.modal').modal();
   });
 </script>
 </body>

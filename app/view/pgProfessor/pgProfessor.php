@@ -3,8 +3,9 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 
 
 session_start();
-if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "professor"){
-    header("location: $raiz/index.php?error=1");
+if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor"){
+    $_SESSION['erro_login'] = 1;
+    header("location: $raiz");
 }
 
 ?>
@@ -40,7 +41,7 @@ if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "professor"){
       
     <ul id="slide-out" class="sidenav sidenav-fixed">
       <li class="center red darken-3">
-          <a href="#"><img src="../_img/logoGA.png" style="height: 15px;"></a>
+          <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 15px;"></a>
       </li>
       <li><a href="#!">Agendar</a></li>
       <li><a href="#!">Verificar Agendamentos</a></li>
