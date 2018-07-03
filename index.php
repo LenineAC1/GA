@@ -1,15 +1,10 @@
 <?php
 session_start(); //Inicia sessão
-if(isset($_SESSION['erro_login']) && $_SESSION['erro_login'] === 1){ // checa se teve erro anteriormente
-    // TRATE A MODAL DE ERRO AQUI
-
-    //---
-    $_SESSION['erro_login'] = 0; // reseta sessão de erro para evitar loop
-  }
 if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de login
     $tipo_conta = $_SESSION['session_tipo']; //Pega o tipo de conta
     if ($tipo_conta == "coordenador") { //Testa se é do tipo coordenador
         header("location: app/view/pgCoord/pgCoord.php"); //Redireciona para pagina de coordenador
+
     } else if ($tipo_conta == "professor") { //Testa se é do tipo professor
         header("location: app/view/pgProfessor/pgProfessor.php"); //Redireciona para pagina de professor
       }
@@ -19,19 +14,22 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
     <!DOCTYPE html>
     <html>
     <head>
+
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Roboto:300,700" rel="stylesheet">
+
       <!--Import materialize.css-->
       <link type="text/css" rel="stylesheet" href="libs/materialize/css/materialize.css" media="screen,projection"/>
       <!--Import custom.css-->
       <link type="text/css" rel="stylesheet" href="libs/materialize/css/custom.css" media="screen,projection"/>
 
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
 
-    <body>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
 
+<body>
       <?php require 'app/view/head.php'; ?>
 
       <main>
@@ -40,7 +38,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
             <div class="card large horizontal">
               <div class="card-stacked">
                 <div class="card-content">
-                  <h4>Login:</h4>
+                  <h4>ENTRAR:</h4>
                   <form method="post" action="libs/validacoes/login/validacao_login.php" class="col s12"
                   ">
                   <div class="row">
@@ -58,7 +56,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
                   <div class="row">
                     <div class="col s12">
                       <button class="btn-large red darken-3 waves-effect waves-light" type="submit"
-                      name="action">Submit
+                      name="action">Entrar
                       <i class="material-icons right">send</i>
                     </button>
                   </div>
@@ -75,7 +73,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
 
     
   <!-- Modal Erro -->
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+  <a class="waves-effect waves-light btn modal-trigger" id="abrir_modal" href="#modalErro" style="display: none;">Modal</a>
 
   <!-- Modal Erro Structure -->
   <div id="modalErro" class="modal">
@@ -89,8 +87,6 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
     </div>
   </div>
-          
-
   </main>
   <footer>
   </footer>
@@ -98,11 +94,21 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
   <script type="text/javascript" src="libs/materialize/js/materialize.js"></script>
   <script type="text/javascript" src="libs/materialize/js/jscustom.js"></script>
   <script type="text/javascript" src="libs/jquery.js"></script>
+
+      <?php
+      if(isset($_SESSION['erro_login']) && $_SESSION['erro_login'] === 1){ // checa se teve erro anteriormente
+          // TRATE A MODAL DE ERRO AQUI
+            echo '<script type="text/javascript"> document.getElementById(\'abrir_modal\').click(); </script>';
+          //---
+          $_SESSION['erro_login'] = 0; // reseta sessão de erro para evitar loop
+      }
+      ?>
+
   <script type="text/javascript">
    $(document).ready(function(){
-    $('.sidenav').sidenav();
-    $('.collapsible').collapsible();
-    $('.modal').modal();
+       $('.sidenav').sidenav();
+       $('.collapsible').collapsible();
+       $('.modal').modal();
   });
 </script>
 </body>

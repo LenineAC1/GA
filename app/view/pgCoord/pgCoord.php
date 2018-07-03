@@ -2,8 +2,9 @@
 $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 
     session_start();
-    if(!$_SESSION['session_login'] || $_SESSION['session_tipo'] != "coordenador"){
-        header("location: $raiz/index.php?error=1");
+    if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "coordenador"){
+        $_SESSION['erro_login'] = 1;
+        header("location: $raiz");
     }
 ?>
 
@@ -37,7 +38,7 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 
     <nav class="hide-on-large-only red darken-3">
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo center"><img src="../_img/logoGA.png" style="height: 30px;"></a>
+        <a href="#" class="brand-logo center"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 30px;"></a>
         <ul id="nav-mobile" class="left">
           <li><a href="#" data-target="slide-out" class="sidenav-trigger white-text"><i class="small material-icons">menu</i></a></li>
         </ul>
@@ -48,7 +49,7 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
       
     <ul id="slide-out" class="sidenav sidenav-fixed">
       <li class="center red darken-3">
-          <a href="#"><img src="../_img/logoGA.png" style="height: 50px;"></a>
+          <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
       </li>
       <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
       <li><a class="modal-trigger" href="#modalNotf"><span class="new badge red darken-3" data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
@@ -99,7 +100,7 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 
       <!--BOTÃO DE SAIR-->
       <div class="divider"></div>
-      <li><a href="#cont?tipo=1&num=1"><i class="material-icons">close</i>SAIR</a></li>
+      <li><a href="<?=$raiz?>/libs/validacoes/login/validacao_deslog.php"><i class="material-icons">close</i>SAIR</a></li>
 
     </ul>
 

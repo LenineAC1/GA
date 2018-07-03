@@ -1,52 +1,53 @@
 <?php
-
+$raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 require_once '../../funcoes_php/funcoes_global.php';
+session_start(); //Inicia sessão
+if (isset($_POST)) { //Verifica se o post foi enviado(evitar erros)
+    if (strlen($_POST["login_email"]) >= 6 && strlen($_POST["login_senha"]) > 3 && filter_var($_POST["login_email"])) { //verifica campos de email e senha, se possui numero minimo de caracteres e se é um email valido
 
-if($_POST) {
-    session_start();
-    if(strlen($_POST["login_email"]) > 6 && strlen($_POST["login_senha"]) > 1) {
+        $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
 
-        $conexao_pdo = conexao_pdo('lobmanager_db', 'root', '');
+        $inputs_login = $_POST; // pega todas as informações enviadas no POST
 
-        $inputs_login = $_POST;
+        $inputs_login["login_senha"] = md5(md5($inputs_login["login_senha"])); // passa a senha do POST para md5(md5);
 
-        $inputs_login["login_senha"] = md5(md5($inputs_login["login_senha"]));
+        $inputs_loginSC = remover_caracteres($inputs_login); // Função que remove caracteres especias evitando SQL injection
 
-        $inputs_loginSC = remover_caracteres($inputs_login);
+        $login_email = $inputs_loginSC['login_email']; // passa o POST do login para uma variavel
 
+        $login_senha = $inputs_loginSC['login_senha']; // passa o POST da senha para uma variavel
 
-        $login_email = $inputs_loginSC['login_email'];
+        $query = $conexao_pdo->prepare("select EMAIL, SENHA, TIPO from user where EMAIL = '$login_email' and SENHA = '$login_senha'"); //prepara a query de seleção onde as informações são correspondentes
 
-        $login_senha = $inputs_loginSC['login_senha'];
+        $query->execute(); // executa a query
 
-        $query = $conexao_pdo->prepare("select EMAIL, SENHA, TIPO from user where EMAIL = '$login_email' and SENHA = '$login_senha'");
+        $queryResult = $query->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
 
-        $query->execute();
+        if (count($queryResult) > 1) {// checa se foram encontrados resultados
 
-        $queryResult = $query->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['session_login'] = $login_email; // salva login realizado em uma sessão para uso posterior
+            $_SESSION['session_tipo'] = $queryResult['TIPO']; // salva tipo da conta realizado em uma sessão para uso posterior
 
-        if(count($queryResult) > 1){
-
-            $_SESSION['session_login'] = $login_email;
-            $_SESSION['session_tipo'] = $queryResult['TIPO'];
-
-            if($queryResult['TIPO'] == "coordenador"){
-                header("location: ../../../app/view/pgCoord/pgCoord.php");
-            }else if($queryResult['TIPO'] == "professor"){
-                header("location: ../../../app/view/pgProfessor/pgProfessor.php");
+            if ($queryResult['TIPO'] == "coordenador") {// checa se tipo da conta é de coordenador
+                header("location: $raiz/app/view/pgCoord/pgCoord.php");// redireciona para pagina de coordenador
+            } else if ($queryResult['TIPO'] == "professor") {// checa se tipo da conta é de professor
+                header("location: $raiz/app/view/pgProfessor/pgProfessor.php");// redireciona para pagina de coordenador
             }
 
-        }else{
-            header("location: ../../../index.php?error=1");
+        } else {// caso não encontre resultados da query retorna para index com uma sessão de erro
+            header("location: $raiz");
+            $_SESSION['erro_login'] = 1;
         }
 
 
-    }else{
-        header("location: ../../../index.php?error=1");
+    } else { // caso os campos não estajam devidamente preenchidos retorna para index com uma sessão de erro
+        header("location: $raiz");
+        $_SESSION['erro_login'] = 1;
     }
 
-}else{
-    header("location: ../../../index.php?error=1");
+} else { // caso não receba o POST retorna para index com uma sessão de erro
+    header("location: $raiz");
+    $_SESSION['erro_login'] = 1;
 }
 
 ?>
