@@ -1,23 +1,6 @@
 /*CUSTOM CSS*/
-
-/*Mank Sans*/
-@font-face
-{
-    font-family: 'MankSans';
-    src: url('../fonts/mank_sans/manksans.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face
-{
-    font-family: 'MankSansMedium';
-    src: url('../fonts/mank_sans/manksans-medium.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-
 html{
-    font-family: 'MankSansMedium';
+    font-family: 'Roboto', sans-serif;
     font-size: 20px;
 }
 
@@ -35,7 +18,7 @@ iframe
 
 /*Coisas do Materialize*/
 p{
-    font-weight: 600;
+    font-family: 'Roboto', sans-serif;
 }
 .collapsible i
 {
@@ -61,7 +44,3 @@ p{
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     opacity: .8;
 }
-.parallax-container {
-    height: 500px;
-}
-

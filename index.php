@@ -17,6 +17,8 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
 
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css?family=Roboto:300,700" rel="stylesheet">
+
       <!--Import materialize.css-->
       <link type="text/css" rel="stylesheet" href="libs/materialize/css/materialize.css" media="screen,projection"/>
       <!--Import custom.css-->
@@ -36,7 +38,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
             <div class="card large horizontal">
               <div class="card-stacked">
                 <div class="card-content">
-                  <h4>Login:</h4>
+                  <h4>ENTRAR:</h4>
                   <form method="post" action="libs/validacoes/login/validacao_login.php" class="col s12"
                   ">
                   <div class="row">
@@ -54,7 +56,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
                   <div class="row">
                     <div class="col s12">
                       <button class="btn-large red darken-3 waves-effect waves-light" type="submit"
-                      name="action">Submit
+                      name="action">Entrar
                       <i class="material-icons right">send</i>
                     </button>
                   </div>
