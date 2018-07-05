@@ -22,6 +22,10 @@ if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0"/>
+
+        <?php
+        require_once $_SERVER['DOCUMENT_ROOT']. '/GA/libs/funcoes_php/tratamento_calendario.php';
+        ?>
     </head>
 
     <style>
@@ -106,76 +110,18 @@ if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor
       <div class="divider"></div>
       <li><a href="<?=$raiz?>/libs/validacoes/login/validacao_deslog.php"><i class="material-icons">close</i>SAIR</a></li>
     </ul>
+        <div class="row center">
+            <div class="col s12">
+                <p class="flow-text">Calendário</p>
+                <p class="flow-text"><?php echo GetNomeMes($view_mes_atual)." - ".date("Y")?></p>
+            </div>
+        </div>
+        <div class="container">
+        <a href=?atual=menos><i class="medium material-icons red-text">chevron_left</i></a>
+        <a href=?atual=mais style="float: right"><i class="medium material-icons red-text">chevron_right</i></a>
+        </div>
+            <?php MostreCalendario($view_mes_atual) ?>
 
-    <div class="row center">
-      <div class="col s12">
-          <p class="flow-text">Calendário</p>
-          <p class="flow-text">07/2018</p>
-      </div>
-    </div>
-
-    <div class="row center">
-      <table class="centered striped">
-        <thead>
-          <tr>
-            <th>D</th>
-            <th>S</th>
-            <th>T</th>
-            <th>Q</th>
-            <th>Q</th>
-            <th>S</th>
-            <th>S</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-            <td>4</td>
-            <td>5</td>
-            <td>6</td>
-            <td>7</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>9</td>
-            <td>10</td>
-            <td>11</td>
-            <td>12</td>
-            <td>13</td>
-            <td>14</td>
-          </tr>
-          <tr>
-            <td>15</td>
-            <td>16</td>
-            <td>17</td>
-            <td>18</td>
-            <td>19</td>
-            <td>20</td>
-            <td>21</td>
-          </tr>
-          <tr>
-            <td>22</td>
-            <td>23</td>
-            <td>24</td>
-            <td>25</td>
-            <td>26</td>
-            <td>27</td>
-            <td>28</td>
-          </tr>
-          <tr>
-            <td>29</td>
-            <td>30</td>
-            <td>31</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     </main>
 
     <footer>
@@ -186,5 +132,11 @@ if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor
       <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.min.js"></script>
       <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/jscustom.js"></script>
       <script type="text/javascript" src="<?=$raiz?>/libs/jquery.js"></script>
+    <script>
+        <!-- script para esconder GET e evitar bugar com redirecionamento -->
+        if(typeof window.history.pushState == 'function') {
+            window.history.pushState({}, "Hide", '<?php echo $_SERVER['PHP_SELF'];?>');
+        }
+    </script>
     </body>
   </html>
