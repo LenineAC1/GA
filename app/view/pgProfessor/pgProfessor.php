@@ -22,6 +22,10 @@ if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0"/>
+
+        <?php
+        require_once $_SERVER['DOCUMENT_ROOT']. '/GA/libs/funcoes_php/tratamento_calendario.php';
+        ?>
     </head>
 
     <style>
@@ -60,7 +64,9 @@ if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor
 
       <div class="divider"></div>
 
-      <li class="center">LABORATÓRIOS</li>
+      <li class="center">Selecione um laboratório</li>
+
+      <div class="divider"></div>
 
       <ul class="collapsible">
         <li>
@@ -107,75 +113,48 @@ if(!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor
       <li><a href="<?=$raiz?>/libs/validacoes/login/validacao_deslog.php"><i class="material-icons">close</i>SAIR</a></li>
     </ul>
 
-    <div class="row center">
-      <div class="col s12">
-          <p class="flow-text">Calendário</p>
-          <p class="flow-text">07/2018</p>
-      </div>
-    </div>
 
-    <div class="row center">
-      <table class="centered striped">
-        <thead>
-          <tr>
-            <th>D</th>
-            <th>S</th>
-            <th>T</th>
-            <th>Q</th>
-            <th>Q</th>
-            <th>S</th>
-            <th>S</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-            <td>4</td>
-            <td>5</td>
-            <td>6</td>
-            <td>7</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td>9</td>
-            <td>10</td>
-            <td>11</td>
-            <td>12</td>
-            <td>13</td>
-            <td>14</td>
-          </tr>
-          <tr>
-            <td>15</td>
-            <td>16</td>
-            <td>17</td>
-            <td>18</td>
-            <td>19</td>
-            <td>20</td>
-            <td>21</td>
-          </tr>
-          <tr>
-            <td>22</td>
-            <td>23</td>
-            <td>24</td>
-            <td>25</td>
-            <td>26</td>
-            <td>27</td>
-            <td>28</td>
-          </tr>
-          <tr>
-            <td>29</td>
-            <td>30</td>
-            <td>31</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!--calendario-->
+      <div class="container">
+        <div class="row center valign-wrapper">
+          <div class="col s4">
+            <p><a href=?atual=menos><i class="medium material-icons red-text text-darken-3">chevron_left</i></a></p>
+          </div>
+          <div class="col s4">
+          <p class="flow-text">Calendário<br>
+            <?php echo GetNomeMes($view_mes_atual)." - ".date("Y")?></p>
+          </div>
+          <div class="col s4">
+            <a href=?atual=mais><i class="medium material-icons red-text text-darken-3">chevron_right</i></a>
+          </div>
+        </div>
+      </div>
+            <?php MostreCalendario($view_mes_atual) ?>
+
+    </main>
+
+    <!-- Modal Notificações Structure -->
+      <div id="modalNotf" class="modal bottom-sheet">
+
+        <div class="modal-content">
+          <h4>Notificações</h4>
+          <ul class="collection">
+
+          <!--Estrutura da Notificação-->
+            <li class="collection-item avatar">
+              <span class="title">SOLICITAÇÃO ACEITA</span> <!--Estado da solicitação-->
+              <p>Sua solicitação do: <span>nome lab</span>, <!--Nome do lab solicitado-->
+                 para o dia: <span>data</span>, <!--data solicitada-->
+                 foi <span>aceita</span>. <!--Estado da solicitação-->
+              </p>
+            </li>
+
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">FINALIZAR</a>
+        </div>
+      </div>
     </main>
 
     <footer>

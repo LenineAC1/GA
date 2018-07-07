@@ -3,7 +3,7 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 require_once '../../funcoes_php/funcoes_global.php';
 session_start(); //Inicia sessão
 if (isset($_POST)) { //Verifica se o post foi enviado(evitar erros)
-    if (strlen($_POST["login_email"]) >= 6 && strlen($_POST["login_senha"]) > 3 && filter_var($_POST["login_email"])) { //verifica campos de email e senha, se possui numero minimo de caracteres e se é um email valido
+    if (strlen($_POST["login_email"]) >= 6 && strlen($_POST["login_senha"]) > 3 && filter_var($_POST["login_email"],FILTER_VALIDATE_EMAIL)) { //verifica campos de email e senha, se possui numero minimo de caracteres e se é um email valido
 
         $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
 
