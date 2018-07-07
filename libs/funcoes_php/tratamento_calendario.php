@@ -11,6 +11,10 @@
 // link dos dias do mes(classe) = C_link_dia
 /*--------------------------------------------*/
 
+$raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
+
+require_once 'funcoes_global.php';
+
 if(session_id() == '') {
     session_start();
 }
@@ -43,6 +47,20 @@ if (isset($_GET['mes'])){
             $view_mes_atual = --$_SESSION['last_mes'];
 
         }
+    }
+}
+
+
+function getNomeLabByID($id_lab){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+    $query_lab_id = $conexao_pdo->prepare("SELECT `NOME` FROM `o_a` WHERE `ID` = $id_lab "); //prepara a query de seleção onde as informações são correspondentes
+    $query_lab_id->execute();
+    $queryResult_lab_id = $query_lab_id->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($queryResult_lab_id) >= 1) {// checa se foram encontrados resultados
+
+        return $queryResult_lab_id['NOME'];
     }
 }
 
@@ -88,8 +106,25 @@ function GetNomeMes( $mes )
 
 
 
-function MostreCalendario( $mes  )
+function MostreCalendario( $mes  , $lab)
 {
+
+
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+    $query_pedido = $conexao_pdo->prepare("select * from agendamento where ESTADO_AGENDAMENTO = 'pedido'"); //prepara a query de seleção onde as informações são correspondentes
+    $query_pedido->execute();
+    $queryResult_pedido = $query_pedido->fetchAll(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($queryResult_pedido) > 1) {// checa se foram encontrados resultados
+
+        foreach ($queryResult_pedido as &$value) {
+            $dias_marcados[]=$value['DATA'];
+            $lab_marcados[]=$value['FK_O_A_ID'];
+        }
+    }
+
+
 
     $numero_dias = GetNumeroDias( $mes );	// retorna o número de dias que tem o mês desejado
     $nome_mes = GetNomeMes( $mes );
@@ -99,7 +134,6 @@ function MostreCalendario( $mes  )
 
     echo "<div class='row center container'><table id = 'tabela_mes' class='centered striped'>"; // TABELA PRINCIPAL ( TAG DE INICIO )
     echo "<tr id='tr_nome_mes'>";
-    // echo "<td colspan = 7 id='td_nome_mes'>".$nome_mes."</td>"; // CABEÇALHO CALENDARIO ( NOME DO MES )
     echo "</tr>";
     echo "<tr class='tr_dias_semana'>";
     MostreSemanas();	// função que mostra as semanas aqui
@@ -114,29 +148,42 @@ function MostreCalendario( $mes  )
         {
             echo "<td ";
 
-            if( ($diacorrente == ( date('d') - 1) && date('m') == $mes) )
+            if(($diacorrente + 1) <= $numero_dias )
             {
-                echo " id = 'dia_atual' ";
-            }
-            else
-            {
-                if(($diacorrente + 1) <= $numero_dias )
+                if( $coluna < $diasemana && $linha == 0)
                 {
-                    if( $coluna < $diasemana && $linha == 0)
-                    {
-                        echo " id = 'dia_branco' ";
-                    }
-                    else
-                    {
-                        echo " id = 'dia_comum' ";
-                    }
+                    echo " id = 'dia_branco' ";
                 }
                 else
                 {
-                    echo "id = 'dia vazio' style = 'display: none'";
+                    foreach ($dias_marcados as $chave => $valor) {
+                        $str_dias_marcados = $dias_marcados[$chave];
+                        $query_limite = $conexao_pdo->prepare("SELECT DATA FROM agendamento GROUP BY DATA HAVING COUNT(*) = 6 "); //prepara a query de seleção onde as informações são correspondentes
+                        $query_limite->execute();
+                        $queryResult_limite = $query_limite->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
+                        if (substr($queryResult_limite['DATA'], 0, 2) == ($diacorrente + 1)) {
+                            foreach ($lab_marcados as $chave2 => $valor2) {
+                                $str_lab_marcados = $lab_marcados[$chave];
+                                if ($str_lab_marcados == $lab) {
+                                    if (substr($str_dias_marcados, 0, 2) == ($diacorrente + 1) && substr($str_dias_marcados, 2, 2) == $mes) {
+                                        echo " id = 'dia_comum' style ='border: 1.5px red solid;";
+                                    } else {
+                                        echo " id = 'dia_comum'";
+                                    }
+                                } else {
+                                    echo " id = 'dia_comum'";
+                                }
+                            }
+                        }
+
+                    }
                 }
             }
-            echo "class='td_dia_mes'>";
+            else
+            {
+                echo "id = 'dia vazio' style = 'display: none'";
+            }
+            echo "class='td_dia_mes '>";
 
 
             /* TRECHO IMPORTANTE: A PARTIR DESTE TRECHO É MOSTRADO UM DIA DO CALENDÁRIO (MUITA ATENÇÃO NA HORA DA MANUTENÇÃO) */
@@ -167,28 +214,6 @@ function MostreCalendario( $mes  )
     }
 
     echo "</table></div>";
-}
-
-function MostreCalendarioCompleto()
-{
-    echo "<table align = 'center'>";
-    $cont = 1;
-    for( $j = 0; $j < 4; $j++ )
-    {
-        echo "<tr>";
-        for( $i = 0; $i < 3; $i++ )
-        {
-
-            echo "<td>";
-            MostreCalendario( ($cont < 10 ) ? "0".$cont : $cont );
-
-            $cont++;
-            echo "</td>";
-
-        }
-        echo "</tr>";
-    }
-    echo "</table>";
 }
 
 
