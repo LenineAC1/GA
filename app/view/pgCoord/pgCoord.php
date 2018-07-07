@@ -92,7 +92,7 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
           <div class="collapsible-header valign-wrapper "><i class="material-icons">local_florist</i>LABORATÓRIOS DE MEIO AMBIENTE</div>
           <div class="collapsible-body">
             <ul>
-              <li><a href="#cont?tipo=4&num=1">LAB 1</a></li>
+              <li><a href="#cont?tipo=4&num=1" target="AreaControle_self">LAB 1</a></li>
             </ul>
           </div>
         </li>
@@ -106,41 +106,41 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 
     <div class="row center">
       <div class="col s12">
-        <p class="flow-text">Área de Controle</p>
+           <!--Mostrar o conteúdo relacionado ao link selecionado-->
+           <iframe name="AreaControle" src="<?=$raiz?>/app/view/AreaControle/AreaControle.php">Seu Browser não suporta!</iframe>
       </div>
     </div>
 
-    <div class="row center">
-      <div class="col s12">
-          <!--Mostrar o conteúdo relacionado ao link selecionado-->
-           <iframe id="AreaControle" src="<?=$raiz?>/app/view/AreaControle/AreaControle.php">Seu Browser não suporta!</iframe>
-      </div>
-    </div>
-
-      <!-- Modal Notificações Structure -->
-      <div id="modalNotf" class="modal bottom-sheet">
-        <div class="modal-content">
-          <h4>Notificações</h4>
-          <ul class="collection">
-          <!--Estrutura da Notificação-->
-            <li class="collection-item avatar">
-              <i class="material-icons">person</i>
-              <span class="title">Nome do professor</span>
-              <p>Solicitação de Agendamento: <br>
-                 Laboratório I
-              </p>
-              <div class="secondary-content">
-                <a href="#!" class="row green-text"><i class="material-icons left valign-wrapper">thumb_up_alt</i>APROVAR</a>
-                <a href="#!" class="row red-text"><i class="material-icons left valign-wrapper">thumb_down_alt</i>RECUSAR</a>
-              </div>
-            </li>
-
-          </ul>
+        <!-- Modal Notificações Structure -->
+        <div id="modalNotf" class="modal bottom-sheet">
+          <div class="modal-content container">
+            <h4>Notificações</h4>
+            <ul class="collection">
+              <li id="#notf_content" class="row valign-wrapper"><!--Inicio notificação-->
+                <div class="col s6">
+                  <!--Estrutura da Notificação-->
+                  <p>
+                    Nome: <span>nome do professor</span><!--Nome do professor que solicitou-->
+                    <br>
+                    Data solicitada: <span>data</span><!--data solicitada-->
+                    <br>
+                    Solicitação de Agendamento: <span>Laboratório 1</span><!--Nome do lab solicitado-->
+                  </p>
+                </div>
+                <div class="col s6 center">
+                  <i class="tiny material-icons green-text">done</i>
+                  <a href="#!aprovado" class="green-text">APROVAR</a><!--Aceitar solicitação-->
+                  <br>
+                  <i class="tiny material-icons red-text">delete_outline</i>
+                  <a href="#!recusado" class="red-text">RECUSAR</a><!--Recusar solicitação-->
+                </div>
+              </li><!--Fim notificação-->
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">FINALIZAR</a>
+          </div>
         </div>
-        <div class="modal-footer">
-          <a href="#!" class="modal-close waves-effect waves-green btn-flat">FINALIZAR</a>
-        </div>
-      </div>
     </main>
 
     

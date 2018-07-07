@@ -16,25 +16,26 @@ if (isset($_GET['id_lab'])){
 ?>
 
 <!DOCTYPE html>
-<html>
-<head>
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="<?=$raiz?>/libs/materialize/css/materialize.css"  media="screen,projection"/>
-    <!--Import custom.css-->
-    <link type="text/css" rel="stylesheet" href="<?=$raiz?>/libs/materialize/css/custom.css"  media="screen,projection"/>
 
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0"/>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="<?=$raiz?>/libs/materialize/css/materialize.css"  media="screen,projection"/>
+      <!--Import custom.css-->
+      <link type="text/css" rel="stylesheet" href="<?=$raiz?>/libs/materialize/css/custom.css"  media="screen,projection"/>
 
-    <?php
-    require_once $_SERVER['DOCUMENT_ROOT']. '/GA/libs/funcoes_php/tratamento_calendario.php';
-    ?>
-</head>
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0"/>
 
-<style>
-    header, main, footer {
+        <?php
+        require_once $_SERVER['DOCUMENT_ROOT']. '/GA/libs/funcoes_php/tratamento_calendario.php';
+        ?>
+    </head>
+
+    <style>
+        header, main, footer {
         padding-left: 300px;
     }
 
@@ -59,9 +60,9 @@ if (isset($_GET['id_lab'])){
 <main>
 
     <ul id="slide-out" class="sidenav sidenav-fixed">
-        <li class="center red darken-3">
-            <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
-        </li>
+      <li class="center red darken-3">
+          <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
+      </li>
         <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
         <li><a class="modal-trigger" href="#modalNotf"><span class="new badge red darken-3" data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
 
@@ -115,38 +116,71 @@ if (isset($_GET['id_lab'])){
         <div class="divider"></div>
         <li><a href="<?=$raiz?>/libs/validacoes/login/validacao_deslog.php"><i class="material-icons">close</i>SAIR</a></li>
     </ul>
-    <div class="row center">
-        <div class="col s12">
-            <p class="flow-text">Calendário</p>
-            <?php if (!isset($_SESSION['id_lab'])){echo "Escolha um laboratorio !";}else{echo getNomeLabByID($_SESSION['id_lab']);}?>
-            <p class="flow-text"><?php echo GetNomeMes($view_mes_atual)." - ".date("Y")?></p>
+
+
+    <!--calendario-->
+      <div class="container">
+        <div class="row center valign-wrapper">
+          <div class="col s4">
+            <p><a href=?atual=menos><i class="medium material-icons red-text text-darken-3">chevron_left</i></a></p>
+          </div>
+          <div class="col s4">
+          <p class="flow-text">Calendário<br>
+
+            <?php echo GetNomeMes($view_mes_atual)." - ".date("Y")?></p>
+              <?php if (!isset($_SESSION['id_lab'])){echo "Escolha um laboratorio !";}else{echo getNomeLabByID($_SESSION['id_lab']);}?>
+          </div>
+          <div class="col s4">
+            <a href=?atual=mais><i class="medium material-icons red-text text-darken-3">chevron_right</i></a>
+          </div>
         </div>
-    </div>
-    <div class="container">
-        <a href=?atual=menos><i class="medium material-icons red-text">chevron_left</i></a>
-        <a href=?atual=mais style="float: right"><i class="medium material-icons red-text">chevron_right</i></a>
-    </div>
-    <?php MostreCalendario($view_mes_atual,$_SESSION['id_lab']) ?>
+      </div>
+        <?php MostreCalendario($view_mes_atual,$_SESSION['id_lab']) ?>
 
-</main>
+    </main>
 
-<footer>
+    <!-- Modal Notificações Structure -->
+      <div id="modalNotf" class="modal bottom-sheet">
 
-</footer>
+        <div class="modal-content">
+          <h4>Notificações</h4>
+          <ul class="collection">
 
-<!--JavaScript at end of body for optimized loading-->
-<script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.min.js"></script>
-<script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/jscustom.js"></script>
-<script type="text/javascript" src="<?=$raiz?>/libs/jquery.js"></script>
-<script>
-    var url_atual = window.location.href;
+          <!--Estrutura da Notificação-->
+            <li class="collection-item avatar">
+              <span class="title">SOLICITAÇÃO ACEITA</span> <!--Estado da solicitação-->
+              <p>Sua solicitação do: <span>nome lab</span>, <!--Nome do lab solicitado-->
+                 para o dia: <span>data</span>, <!--data solicitada-->
+                 foi <span>aceita</span>. <!--Estado da solicitação-->
+              </p>
+            </li>
 
-    if(url_atual.indexOf('atual=mais') != -1){
-        window.history.pushState(null, null, url_atual.replace('?atual=mais',''));
-    }else if(url_atual.indexOf('atual=menos') != -1){
-        window.history.pushState(null, null, url_atual.replace('?atual=menos',''));
-    }
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">FINALIZAR</a>
+        </div>
+      </div>
+    </main>
 
-</script>
-</body>
-</html>
+    <footer>
+      
+    </footer>
+
+      <!--JavaScript at end of body for optimized loading-->
+      <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.min.js"></script>
+      <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/jscustom.js"></script>
+      <script type="text/javascript" src="<?=$raiz?>/libs/jquery.js"></script>
+        <script>
+            var url_atual = window.location.href;
+
+            if(url_atual.indexOf('atual=mais') != -1){
+                window.history.pushState(null, null, url_atual.replace('?atual=mais',''));
+            }else if(url_atual.indexOf('atual=menos') != -1){
+                window.history.pushState(null, null, url_atual.replace('?atual=menos',''));
+            }
+
+        </script>
+    </body>
+  </html>
+

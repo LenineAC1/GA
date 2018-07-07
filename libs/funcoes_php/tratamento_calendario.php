@@ -11,6 +11,7 @@
 // link dos dias do mes(classe) = C_link_dia
 /*--------------------------------------------*/
 
+
 $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 
 require_once 'funcoes_global.php';
@@ -64,7 +65,6 @@ function getNomeLabByID($id_lab){
     }
 }
 
-
 function MostreSemanas()
 {
     $semanas = "DSTQQSS";
@@ -83,7 +83,9 @@ function GetNumeroDias( $mes )
 
     if (((date('Y') % 4) == 0 and (date('Y') % 100)!=0) or (date('Y') % 400)==0)
     {
+
         $numero_dias['02'] = 29;	// altera o numero de dias de fevereiro se o ano for bissexto
+
     }
 
     return $numero_dias[$mes];
@@ -124,8 +126,6 @@ function MostreCalendario( $mes  , $lab)
         }
     }
 
-
-
     $numero_dias = GetNumeroDias( $mes );	// retorna o número de dias que tem o mês desejado
     $nome_mes = GetNomeMes( $mes );
     $diacorrente = 0;
@@ -147,6 +147,7 @@ function MostreCalendario( $mes  , $lab)
         for( $coluna = 0; $coluna < 7; $coluna++ )
         {
             echo "<td ";
+
 
             if(($diacorrente + 1) <= $numero_dias )
             {
@@ -185,7 +186,6 @@ function MostreCalendario( $mes  , $lab)
             }
             echo "class='td_dia_mes '>";
 
-
             /* TRECHO IMPORTANTE: A PARTIR DESTE TRECHO É MOSTRADO UM DIA DO CALENDÁRIO (MUITA ATENÇÃO NA HORA DA MANUTENÇÃO) */
 
             if( $diacorrente + 1 <= $numero_dias )
@@ -196,7 +196,9 @@ function MostreCalendario( $mes  , $lab)
                 }
                 else
                 {
-                    echo "<a href = ".$_SERVER["PHP_SELF"]."?mes=$mes&dia=".($diacorrente+1)." id='link_dia_".($diacorrente+1)."' class='C_link_dia red-text'>".++$diacorrente . "</a>";
+
+                    echo "<a href = ".$_SERVER["PHP_SELF"]."?mes=$mes&dia=".($diacorrente+1)." id='link_dia_".($diacorrente+1)."' class='C_link_dia red-text text-darken-3'>".++$diacorrente . "</a>";
+
                 }
             }
             else
@@ -215,9 +217,5 @@ function MostreCalendario( $mes  , $lab)
 
     echo "</table></div>";
 }
-
-
-
-
 
 ?>
