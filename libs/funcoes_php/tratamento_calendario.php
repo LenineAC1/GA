@@ -37,29 +37,29 @@ function setas($lado)
         $view_mes_atual = $_GET['mes'];
         $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
         if ($view_mes_atual > 1 && $lado=="esq") {
-            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons red-text text-darken-3\">chevron_left</i></a></p>";
+            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
         }
         if ($view_mes_atual < 12  && $lado=="dir") {
-            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons red-text text-darken-3\">chevron_right</i></a>";
+            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
         }
     } else
         if (isset($_GET['atual'])) {
         $view_mes_atual = $_GET['atual'];
         $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
         if ($view_mes_atual > 1 && $lado=="esq") {
-            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons red-text text-darken-3\">chevron_left</i></a></p>";
+            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
         }
         if ($view_mes_atual < 12  && $lado=="dir") {
-            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons red-text text-darken-3\">chevron_right</i></a>";
+            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
         }
     } else if (!isset($_GET['atual'])) {
         $view_mes_atual = date('m');
         $_SESSION['last_mes'] = date('m');
         if ($view_mes_atual > 1 && $lado=="esq") {
-            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons red-text text-darken-3\">chevron_left</i></a></p>";
+            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
         }
         if ($view_mes_atual < 12  && $lado=="dir") {
-            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons red-text text-darken-3\">chevron_right</i></a>";
+            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
         }
     }
 }

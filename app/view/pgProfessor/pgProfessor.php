@@ -64,7 +64,8 @@ if (isset($_GET['id_lab'])){
           <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
       </li>
         <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
-        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge red darken-3" data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
+
+        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1" data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
 
         <li><a href="#cont?tipo=1&num=1">MEUS AGENDAMENTOS</a></li>
 
@@ -121,16 +122,16 @@ if (isset($_GET['id_lab'])){
     <!--calendario-->
       <div class="container">
         <div class="row center valign-wrapper">
-          <div class="col s4">
+          <div class="col s2">
             <?php setas("esq") ?>
           </div>
-          <div class="col s4">
-          <p class="flow-text">Calendário<br>
-
-            <?php echo GetNomeMes($view_mes_atual)." - ".date("Y")?></p>
-              <?php if (!isset($_SESSION['id_lab'])){echo "Escolha um laboratorio !";}else{echo getNomeLabByID($_SESSION['id_lab']);}?>
+          <div class="col s8">
+          <p class="flow-text">Selecione uma data<br>
+            <?php echo GetNomeMes($view_mes_atual)." - ".date("Y")?>
+          </p>
+              <?php if (!isset($_SESSION['id_lab'])){echo "Escolha um laboratorio!";}else{echo getNomeLabByID($_SESSION['id_lab']);}?>
           </div>
-          <div class="col s4">
+          <div class="col s2">
               <?php setas("dir") ?>
           </div>
         </div>
@@ -142,7 +143,6 @@ if (isset($_GET['id_lab'])){
             MostreCalendario($view_mes_atual, $_SESSION['id_lab']);
         }
         ?>
-
     </main>
 
     <!-- Modal Notificações Structure -->
@@ -167,16 +167,98 @@ if (isset($_GET['id_lab'])){
           <a href="#!" class="modal-close waves-effect waves-green btn-flat">FINALIZAR</a>
         </div>
       </div>
-    </main>
+
+      <!-- Modal Solicitação de laboratorio Structure -->
+      <div id="modalSolicitacao" class="modal modal-fixed-footer">
+        <form action="">
+          <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Solicitar</h4>
+            Nome: <span>Nome do lab solicitado</span><br><!--Nome do lab solicitado-->
+            Data: <span>Data solicitada</span><!--Data solicitada-->
+            <ul class="collapsible">
+              <li>
+                <div class="collapsible-header"><i class="cyan-text text-darken-1 material-icons">brightness_5</i>ETIM / Ensino Médio</div>
+                <div class="collapsible-body cyan-text text-darken-1">
+                  <div class="row">
+                    <div class="input-field col s6">
+                      <select>
+                        <option value="" disabled selected>Curso</option>
+                        <option value="1">Ensino Médio</option>
+                        <option value="2">Informática</option>
+                        <option value="3">Química</option>
+                        <option value="4">Segurança do trabalho</option>
+                        <option value="5">Nutrição e Dietética</option>
+                        <option value="6">Meio Ambiente</option>
+                      </select>
+                      <label>Selecione um Curso</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <select>
+                        <option value="" disabled selected>Ano</option>
+                        <option value="1">1º ano</option>
+                        <option value="2">2º ano</option>
+                        <option value="3">3º ano</option>
+                      </select>
+                      <label>Selecione o Ano</label>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="collapsible-header"><i class="cyan-text text-darken-1 material-icons">brightness_2</i>Modular</div>
+                <div class="collapsible-body cyan-text text-darken-1">
+                  <div class="row">
+                    <div class="input-field col s6">
+                      <select>
+                        <option value="" disabled selected>Curso</option>
+                        <option value="1">Informática</option>
+                        <option value="2">Automação Industrial</option>
+                        <option value="3">Contabilidade</option>
+                        <option value="4">Segurança do trabalho</option>
+                        <option value="5">Nutrição e Dietética</option>
+                        <option value="6">Química</option>
+                      </select>
+                      <label>Selecione um Curso</label>
+                    </div>
+                    <div class="input-field col s6">
+                      <select>
+                        <option value="" disabled selected>Módulo</option>
+                        <option value="1">1º módulo</option>
+                        <option value="2">2º módulo</option>
+                        <option value="3">3º módulo</option>
+                      </select>
+                      <label>Selecione o Ano</label>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="SOLICITAR AGENDAMENTO" class="modal-close waves-effect waves-green btn-flat">
+            <a href="#!" class="modal-close waves-effect waves-red btn-flat">CANCELAR</a>
+          </div>
+        </form>
+      </div>
 
     <footer>
       
     </footer>
 
       <!--JavaScript at end of body for optimized loading-->
-      <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.min.js"></script>
-      <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/jscustom.js"></script>
-      <script type="text/javascript" src="<?=$raiz?>/libs/jquery.js"></script>
+      <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"></script>
+      <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.js"></script>
+      <script type="text/javascript">
+       $(document).ready(function(){
+        $('.sidenav').sidenav();
+        $('.collapsible').collapsible();
+        $('.modal').modal();
+        $('select').formSelect();
+      });
+      </script>
     </body>
   </html>
 
