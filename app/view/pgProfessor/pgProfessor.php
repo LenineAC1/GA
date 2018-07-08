@@ -122,7 +122,7 @@ if (isset($_GET['id_lab'])){
       <div class="container">
         <div class="row center valign-wrapper">
           <div class="col s4">
-            <p><a href=?atual=menos><i class="medium material-icons red-text text-darken-3">chevron_left</i></a></p>
+            <?php setas("esq") ?>
           </div>
           <div class="col s4">
           <p class="flow-text">Calendário<br>
@@ -131,11 +131,17 @@ if (isset($_GET['id_lab'])){
               <?php if (!isset($_SESSION['id_lab'])){echo "Escolha um laboratorio !";}else{echo getNomeLabByID($_SESSION['id_lab']);}?>
           </div>
           <div class="col s4">
-            <a href=?atual=mais><i class="medium material-icons red-text text-darken-3">chevron_right</i></a>
+              <?php setas("dir") ?>
           </div>
         </div>
       </div>
-        <?php MostreCalendario($view_mes_atual,$_SESSION['id_lab']) ?>
+        <?php
+        if (!isset($_SESSION['id_lab'])){
+            MostreCalendario($view_mes_atual, 0);
+        }else{
+            MostreCalendario($view_mes_atual, $_SESSION['id_lab']);
+        }
+        ?>
 
     </main>
 
@@ -171,16 +177,6 @@ if (isset($_GET['id_lab'])){
       <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.min.js"></script>
       <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/jscustom.js"></script>
       <script type="text/javascript" src="<?=$raiz?>/libs/jquery.js"></script>
-        <script>
-            var url_atual = window.location.href;
-
-            if(url_atual.indexOf('atual=mais') != -1){
-                window.history.pushState(null, null, url_atual.replace('?atual=mais',''));
-            }else if(url_atual.indexOf('atual=menos') != -1){
-                window.history.pushState(null, null, url_atual.replace('?atual=menos',''));
-            }
-
-        </script>
     </body>
   </html>
 

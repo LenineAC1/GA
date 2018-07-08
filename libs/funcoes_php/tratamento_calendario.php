@@ -20,33 +20,46 @@ if(session_id() == '') {
     session_start();
 }
 
+
 if (isset($_GET['mes'])){
     $view_mes_atual = $_GET['mes'];
-}else if (!isset($_GET['atual'])){
+}else if (isset($_GET['atual'])) {
+    $view_mes_atual = $_GET['atual'];
+    $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
+}else if (!isset($_GET['atual'])) {
     $view_mes_atual = date('m');
     $_SESSION['last_mes'] = date('m');
-}else{
-    if(!isset($view_mes_atual) ) {
-        $view_mes_atual = date('m');
-    }
-    if ($_GET['atual'] == 'mais'){
-        $view_mes_atual = "0" .$_SESSION['last_mes'];
-        if($view_mes_atual<12 && $view_mes_atual>=9) {
-            $view_mes_atual = ++$_SESSION['last_mes'];
-        }else if ($view_mes_atual<12 && $view_mes_atual<9){
-            $view_mes_atual = "0".++$_SESSION['last_mes'];
-        }else{
-            $view_mes_atual = 12;
-        };
-    }else if($_GET['atual'] == 'menos'){
-        $view_mes_atual = "0" .$_SESSION['last_mes'];
-        if($view_mes_atual>1 && $view_mes_atual<=10) {
-            $view_mes_atual = "0" . --$_SESSION['last_mes'];
+}
 
+function setas($lado)
+{
+    if (isset($_GET['mes'])) {
+        $view_mes_atual = $_GET['mes'];
+        $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
+        if ($view_mes_atual > 1 && $lado=="esq") {
+            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons red-text text-darken-3\">chevron_left</i></a></p>";
         }
-        else if($view_mes_atual>9){
-            $view_mes_atual = --$_SESSION['last_mes'];
-
+        if ($view_mes_atual < 12  && $lado=="dir") {
+            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons red-text text-darken-3\">chevron_right</i></a>";
+        }
+    } else
+        if (isset($_GET['atual'])) {
+        $view_mes_atual = $_GET['atual'];
+        $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
+        if ($view_mes_atual > 1 && $lado=="esq") {
+            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons red-text text-darken-3\">chevron_left</i></a></p>";
+        }
+        if ($view_mes_atual < 12  && $lado=="dir") {
+            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons red-text text-darken-3\">chevron_right</i></a>";
+        }
+    } else if (!isset($_GET['atual'])) {
+        $view_mes_atual = date('m');
+        $_SESSION['last_mes'] = date('m');
+        if ($view_mes_atual > 1 && $lado=="esq") {
+            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons red-text text-darken-3\">chevron_left</i></a></p>";
+        }
+        if ($view_mes_atual < 12  && $lado=="dir") {
+            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons red-text text-darken-3\">chevron_right</i></a>";
         }
     }
 }
