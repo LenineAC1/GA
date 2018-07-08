@@ -10,7 +10,7 @@
 function conexao_pdo($nome_db, $user_db, $senha_db ){
 
     try{
-        $conexao_pdo = new PDO('mysql:host=localhost;dbname='.$nome_db, $user_db, $senha_db);
+        $conexao_pdo = new PDO('mysql:host=localhost;charset=utf8;dbname='.$nome_db, $user_db, $senha_db);
         return $conexao_pdo;
     }catch (PDOException $e)/*Exception propia do PDO*/{
         //Mostra o erro e acaba com o script

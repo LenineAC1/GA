@@ -52,7 +52,7 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
           <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
       </li>
       <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
-      <li><a class="modal-trigger" href="#modalNotf"><span class="new badge red darken-3" data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
+      <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1" data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
 
       <li><a href="#cont?tipo=1&num=1">HISTÓRICO DE AGENDAMENTOS</a></li>
 
@@ -155,13 +155,12 @@ $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
       integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
       crossorigin="anonymous"></script>
       <script type="text/javascript" src="<?=$raiz?>/libs/materialize/js/materialize.js"></script>
-      <!--<script type="text/javascript" src="../../../libs/materialize/js/jscustom.js"></script>-->
-
       <script type="text/javascript">
        $(document).ready(function(){
         $('.sidenav').sidenav();
         $('.collapsible').collapsible();
         $('.modal').modal();
+        $('select').formSelect();
       });
       </script>
     </body>
