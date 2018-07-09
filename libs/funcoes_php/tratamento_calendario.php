@@ -134,9 +134,13 @@ function MostreCalendario( $mes  , $lab)
     if (count($queryResult_pedido) > 1) {// checa se foram encontrados resultados
 
         foreach ($queryResult_pedido as &$value) {
+
             $dias_marcados[]=$value['DATA'];
             $lab_marcados[]=$value['FK_O_A_ID'];
         }
+    }else{
+        $dias_marcados[]=0;
+        $lab_marcados[]=0;
     }
 
     $numero_dias = GetNumeroDias( $mes );	// retorna o número de dias que tem o mês desejado
@@ -210,7 +214,7 @@ function MostreCalendario( $mes  , $lab)
                 else
                 {
 
-                    echo "<a href = ".$_SERVER["PHP_SELF"]."?mes=$mes&dia=".($diacorrente+1)." id='link_dia_".($diacorrente+1)."' class='C_link_dia red-text text-darken-3'>".++$diacorrente . "</a>";
+                    echo "<a href = '".$_SERVER["PHP_SELF"]."?mes=$mes&dia=".($diacorrente+1)."&pedido' id='link_dia_".($diacorrente+1)."' class='C_link_dia red-text text-darken-3 abrir_modal'>".++$diacorrente . "</a>";
 
                 }
             }

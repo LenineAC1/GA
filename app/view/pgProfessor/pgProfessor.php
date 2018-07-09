@@ -123,23 +123,25 @@ if (isset($_GET['id_lab'])){
       <div class="container">
         <div class="row center valign-wrapper">
           <div class="col s2">
-            <?php setas("esq") ?>
+            <?php if (isset($_SESSION['id_lab'])){ setas("esq"); }?>
           </div>
           <div class="col s8">
-          <p class="flow-text">Selecione uma data<br>
-            <?php echo GetNomeMes($view_mes_atual)." - ".date("Y")?>
-          </p>
+              <?php
+              if (isset($_SESSION['id_lab'])) {
+                  echo "<p class='flow-text' > Selecione uma data <br>";
+                echo GetNomeMes($view_mes_atual) . " - " . date("Y");
+            }
+            ?>
+              </p>
               <?php if (!isset($_SESSION['id_lab'])){echo "Escolha um laboratorio!";}else{echo getNomeLabByID($_SESSION['id_lab']);}?>
           </div>
           <div class="col s2">
-              <?php setas("dir") ?>
+              <?php if (isset($_SESSION['id_lab'])){setas("dir"); }?>
           </div>
         </div>
       </div>
         <?php
-        if (!isset($_SESSION['id_lab'])){
-            MostreCalendario($view_mes_atual, 0);
-        }else{
+        if (isset($_SESSION['id_lab'])){
             MostreCalendario($view_mes_atual, $_SESSION['id_lab']);
         }
         ?>
@@ -170,34 +172,34 @@ if (isset($_GET['id_lab'])){
 
       <!-- Modal Solicitação de laboratorio Structure -->
       <div id="modalSolicitacao" class="modal modal-fixed-footer">
-        <form action="">
+        <form id="form_pedido" action="<?=$raiz."/libs/validacoes/pedido/cadastro.php"?>" method="post">
           <div class="modal-content">
             <h4 class="cyan-text text-darken-1">Solicitar</h4>
-            Nome: <span>Nome do lab solicitado</span><br><!--Nome do lab solicitado-->
-            Data: <span>Data solicitada</span><!--Data solicitada-->
+            Nome: <span><?php if (!isset($_SESSION['id_lab'])){echo "Escolha um laboratorio!";}else{echo getNomeLabByID($_SESSION['id_lab']);}?></span><br><!--Nome do lab solicitado-->
+            Data: <span><?= sprintf("%02d",$_GET['dia'] ) ?? '';?>/<?=$_GET['mes'] ?? '';?></span><!--Data solicitada-->
             <ul class="collapsible">
               <li>
                 <div class="collapsible-header"><i class="cyan-text text-darken-1 material-icons">brightness_5</i>ETIM / Ensino Médio</div>
                 <div class="collapsible-body cyan-text text-darken-1">
                   <div class="row">
                     <div class="input-field col s6">
-                      <select>
-                        <option value="" disabled selected>Curso</option>
-                        <option value="1">Ensino Médio</option>
-                        <option value="2">Informática</option>
-                        <option value="3">Química</option>
-                        <option value="4">Segurança do trabalho</option>
-                        <option value="5">Nutrição e Dietética</option>
-                        <option value="6">Meio Ambiente</option>
+                      <select name="curso_manha" form="form_pedido" id="selec1_1">
+                        <option value="" selected>---</option>
+                        <option value="Ensino Médio">Ensino Médio</option>
+                        <option value="Informática">Informática</option>
+                        <option value="Química">Química</option>
+                        <option value="Segurança do trabalho">Segurança do trabalho</option>
+                        <option value="Nutrição e Dietética">Nutrição e Dietética</option>
+                        <option value="Meio Ambiente">Meio Ambiente</option>
                       </select>
                       <label>Selecione um Curso</label>
                     </div>
                     <div class="input-field col s6">
-                      <select>
-                        <option value="" disabled selected>Ano</option>
-                        <option value="1">1º ano</option>
-                        <option value="2">2º ano</option>
-                        <option value="3">3º ano</option>
+                      <select name="ano_manha" form="form_pedido" id="selec1_2">
+                        <option value="" selected>---</option>
+                        <option value="1º ano">1º ano</option>
+                        <option value="2º ano">2º ano</option>
+                        <option value="3º ano">3º ano</option>
                       </select>
                       <label>Selecione o Ano</label>
                     </div>
@@ -209,23 +211,23 @@ if (isset($_GET['id_lab'])){
                 <div class="collapsible-body cyan-text text-darken-1">
                   <div class="row">
                     <div class="input-field col s6">
-                      <select>
-                        <option value="" disabled selected>Curso</option>
-                        <option value="1">Informática</option>
-                        <option value="2">Automação Industrial</option>
-                        <option value="3">Contabilidade</option>
-                        <option value="4">Segurança do trabalho</option>
-                        <option value="5">Nutrição e Dietética</option>
-                        <option value="6">Química</option>
+                      <select name="curso_noite" form="form_pedido" id="selec2_1">
+                        <option value="" selected>---</option>
+                        <option value="Informática">Informática</option>
+                        <option value="Automação Industrial">Automação Industrial</option>
+                        <option value="Contabilidade">Contabilidade</option>
+                        <option value="Segurança do trabalho">Segurança do trabalho</option>
+                        <option value="Nutrição e Dietética">Nutrição e Dietética</option>
+                        <option value="Química">Química</option>
                       </select>
                       <label>Selecione um Curso</label>
                     </div>
                     <div class="input-field col s6">
-                      <select>
-                        <option value="" disabled selected>Módulo</option>
-                        <option value="1">1º módulo</option>
-                        <option value="2">2º módulo</option>
-                        <option value="3">3º módulo</option>
+                      <select name="ano_noite" form="form_pedido" id="selec2_2">
+                        <option value="" selected>---</option>
+                        <option value="1º módulo">1º módulo</option>
+                        <option value="2º módulo">2º módulo</option>
+                        <option value="3º módulo">3º módulo</option>
                       </select>
                       <label>Selecione o Ano</label>
                     </div>
@@ -238,6 +240,8 @@ if (isset($_GET['id_lab'])){
             <input type="submit" value="SOLICITAR AGENDAMENTO" class="modal-close waves-effect waves-green btn-flat">
             <a href="#!" class="modal-close waves-effect waves-red btn-flat">CANCELAR</a>
           </div>
+            <input type="hidden" value="<?=$_GET['mes'] ?? '';?>" name="mes_agendamento">
+            <input type="hidden" value="<?=$_GET['dia'] ?? '';?>" name="dia_agendamento">
         </form>
       </div>
 
@@ -255,10 +259,53 @@ if (isset($_GET['id_lab'])){
        $(document).ready(function(){
         $('.sidenav').sidenav();
         $('.collapsible').collapsible();
-        $('.modal').modal();
         $('select').formSelect();
+
+        var sessao_lab = <?=$_SESSION['id_lab'] ?? '"nope"';?>;
+
+        $('#modalSolicitacao').modal({
+            onOpenStart: function (){
+                window.history.pushState("", "", window.location.href.replace(/&pedido/g,''));
+            }
+        });
+
+        if(window.location.href.indexOf("pedido") > -1 && sessao_lab !== "nope") {
+            $('#modalSolicitacao').modal('open');
+        }
+
       });
+
+       $('#selec1_1,#selec1_2').change(function () {
+           if ($( "#selec1_1 option:selected" ).text()!=="---" || $( "#selec1_2 option:selected" ).text()!=="---") {
+
+               $("#selec2_1,#selec2_2").prop("disabled", true);
+               $('select').formSelect();
+
+           }else{
+               $("#selec2_1,#selec2_2").prop("disabled", false);
+               $('select').formSelect();
+           }
+           if ($( "#selec1_1 option:selected" ).text()=="Segurança do trabalho"){
+               $('#selec1_2 option[value="1º ano"]').prop("disabled",true);
+               $('select').formSelect();
+           }
+
+       });
+
+       $('#selec2_1,#selec2_2').change(function () {
+           if ($( "#selec2_1 option:selected" ).text()!=="---" || $( "#selec2_2 option:selected" ).text()!=="---") {
+
+               $("#selec1_1,#selec1_2").prop("disabled", true);
+               $('select').formSelect();
+
+           }else{
+               $("#selec1_1,#selec1_2").prop("disabled", false);
+               $('select').formSelect();
+           }
+       });
+
       </script>
+
     </body>
   </html>
 
