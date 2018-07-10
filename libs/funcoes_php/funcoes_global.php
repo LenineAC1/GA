@@ -35,5 +35,38 @@ function remover_caracteres($string)
 }
 //Fim: Tirar caracteres especiais
 
+//Inicio: Pegar agendamentos da conta
+function getAgendamendos($idConta){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+    $query_select_agendamentos = $conexao_pdo->prepare("SELECT *  FROM `agendamento` WHERE FK_Conta_ID = :idConta  ORDER BY DATA ASC, HORARIO ASC"); //prepara a query de seleção onde as informações são correspondentes
+    $query_select_agendamentos->bindParam(':idConta', $idConta);
 
+    if ($query_select_agendamentos->execute()){
+        $queryResult = $query_select_agendamentos->fetchAll(PDO::FETCH_ASSOC); // passa resultado da query para um array
+        if (count($queryResult) >= 1) {
+            return $queryResult;
+            }else{
+            $queryResult=array();
+            return $queryResult;
+        }
+        }
+};
+//Fim: Pegar agendamentos da conta
+
+function getHorarioByID($idHorario){
+    $HorarioArray = array(
+        1 => "1º Aula - 7:00 até 7:50", 2 => "2º Aula - 7:50 até 8:40", 3 => "3º Aula - 8:40 até 9:30",
+        4 => "4º Aula - 9:50 até 10:40", 5 => "5º Aula - 10:40 até 11:30", 6 => "6º Aula - 11:30 até 12:20",
+        7 => "7º Aula - 13:30 até 14:20", 8 => "8º Aula - 14:20 até 15:10", 9 => "9º Aula - 15:10 até 15:50",
+    );
+    return $HorarioArray[$idHorario];
+};
+
+function dataCompletaPTBR($dia,$mes,$barra){
+    if ($barra !== null) {
+        return $dataCompleta = sprintf("%02d", $dia) . "$barra" . $mes . "$barra" . date("Y");
+    }else{
+        return $dataCompleta = sprintf("%02d", $dia)  . $mes  . date("Y");
+    }
+}
 ?>

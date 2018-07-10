@@ -18,7 +18,7 @@ if (isset($_POST['curso_manha'])&&isset($_POST['ano_manha'])&&isset($_POST['hora
         "curso" => $_POST['curso_manha'],
         "ano" => $_POST['ano_manha'],
         "horario" => $_POST['horario_manha'],
-        "data" => sprintf("%02d",$_POST['dia_agendamento']).$_POST['mes_agendamento'],
+        "data" => dataCompletaPTBR($_POST['dia_agendamento'],$_POST['mes_agendamento'],null),
         "id_conta" => $_POST['id_conta_agendamento'],
         "id_lab" => $_POST['lab_agendamento'],
     );
@@ -28,7 +28,7 @@ if (isset($_POST['curso_noite'])&&isset($_POST['ano_noite'])&&isset($_POST['hora
         "curso" => $_POST['curso_noite'],
         "ano" => $_POST['ano_noite'],
         "horario" => $_POST['horario_noite'],
-        "data" => sprintf("%02d",$_POST['dia_agendamento']).$_POST['mes_agendamento'],
+        "data" => sprintf("%02d",$_POST['dia_agendamento']).$_POST['mes_agendamento'].date('y'),
         "id_conta" => $_POST['id_conta_agendamento'],
         "id_lab" => $_POST['lab_agendamento'],
     );
@@ -50,7 +50,7 @@ if (isset($post_manha)){
             $_SESSION['retorno_pedido']='erro';
         }else{
             echo "deu certo";
-            $query_insert = $conexao_pdo->prepare("INSERT INTO `agendamento` (`ID`, `HORARIO`, `CURSO`, `ANO_CURSO`, `ESTADO_AGENDAMENTO`, `FK_O_A_ID`, `FK_Conta_ID`, `DATA`) VALUES (NULL, :horario, :curso, :ano, 'pedido', :idLab, :idConta, :dataAgendamento);"); //prepara a query de seleção onde as informações são correspondentes
+            $query_insert = $conexao_pdo->prepare("INSERT INTO `agendamento` (`ID`, `HORARIO`, `CURSO`, `ANO_CURSO`, `ESTADO_AGENDAMENTO`, `FK_O_A_ID`, `FK_Conta_ID`, `DATA`) VALUES (NULL, :horario, :curso, :ano, 'em analise', :idLab, :idConta, :dataAgendamento);"); //prepara a query de seleção onde as informações são correspondentes
             $query_insert->bindParam(':horario', $post_manha['horario']);
             $query_insert->bindParam(':curso', $post_manha['curso']);
             $query_insert->bindParam(':ano', $post_manha['ano']);
@@ -106,4 +106,7 @@ if (isset($post_manha)){
         header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
         $_SESSION['retorno_pedido']='erro';
     }
+}else{
+    header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
+    $_SESSION['retorno_pedido']='erro';
 }

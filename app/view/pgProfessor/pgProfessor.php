@@ -1,8 +1,14 @@
 <?php
 $raiz = 'http://' . $_SERVER['HTTP_HOST'] . "/GA";
 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/GA/libs/funcoes_php/funcoes_global.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/GA/libs/funcoes_php/tratamento_calendario.php';
 
-session_start();
+$conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+if(session_id() == '') {
+    session_start();
+}
 if (!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor") {
     $_SESSION['erro_login'] = 1;
     header("location: $raiz");
@@ -11,6 +17,26 @@ if (isset($_GET['id_lab'])) {
     $_SESSION['id_lab'] = $_GET['id_lab'];
 } else {
 }
+$disponivel = array(
+        1=>'',2=>'',3=>'',4=>'',5=>'',6=>'',7=>'',8=>'',9=>''
+);
+if(isset($_SESSION['id_lab'])&&isset($_GET['mes'])&&isset($_GET['dia'])){
+    $dataCompleta = dataCompletaPTBR($_GET['dia'],$_GET['mes'],null);
+    $query_select_disponivel = $conexao_pdo->prepare("SELECT HORARIO FROM `agendamento` WHERE `DATA` = :dataAgendamento AND `FK_O_A_ID` = :idLab"); //prepara a query de seleção onde as informações são correspondentes
+    $query_select_disponivel->bindParam(':dataAgendamento', $dataCompleta);
+    $query_select_disponivel->bindParam(':idLab', $_SESSION['id_lab']);
+
+    if ($query_select_disponivel->execute()){
+        $queryResult = $query_select_disponivel->fetchAll(PDO::FETCH_COLUMN, 0); // passa resultado da query para um array
+        if (count($queryResult) >= 1) {
+            foreach ($queryResult as $array => $key){
+                    $disponivel[$key] = "disabled";
+            }
+        }
+    }
+}
+
+$arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
 
 ?>
 
@@ -30,9 +56,6 @@ if (isset($_GET['id_lab'])) {
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0"/>
 
-    <?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/GA/libs/funcoes_php/tratamento_calendario.php';
-    ?>
 </head>
 
 <style>
@@ -71,7 +94,7 @@ if (isset($_GET['id_lab'])) {
         <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1"
                                                              data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
 
-        <li><a href="#cont?tipo=1&num=1">MEUS AGENDAMENTOS</a></li>
+        <li><a href="#modalMeusAgendamentos" class="modal-trigger">MEUS AGENDAMENTOS</a></li>
 
         <div class="divider"></div>
 
@@ -195,13 +218,13 @@ if (isset($_GET['id_lab'])) {
 <div id="modalSolicitacao" class="modal modal-fixed-footer" style="min-height: 98%;">
     <form id="form_pedido" action="<?= $raiz . "/libs/validacoes/pedido/cadastro.php" ?>" method="post">
         <div class="modal-content">
-            <h4 class="cyan-text text-darken-1">Solicitar</h4>
+            <h4 class="cyan-text text-darken-1">Solicitar agendamento</h4>
             Nome: <span><?php if (!isset($_SESSION['id_lab'])) {
                     echo "Escolha um laboratorio!";
                 } else {
                     echo getNomeLabByID($_SESSION['id_lab']);
                 } ?></span><br><!--Nome do lab solicitado-->
-            Data: <span><?= sprintf("%02d", $_GET['dia']) ?? ''; ?>/<?= $_GET['mes'] ?? ''; ?></span>
+            Data: <span><?= dataCompletaPTBR($_GET['dia'],$_GET['mes'],"/");?></span>
             <!--Data solicitada-->
             <ul class="collapsible">
                 <li>
@@ -234,15 +257,15 @@ if (isset($_GET['id_lab'])) {
                             <div class="input-field col s6">
                                 <select name="horario_manha" form="form_pedido" id="selec1_3">
                                     <option value="" selected>---</option>
-                                    <option value="1">1º Aula - 7:00 até 7:50</option>
-                                    <option value="2">2º Aula - 7:50 até 8:40</option>
-                                    <option value="3">3º Aula - 8:40 até 9:30</option>
-                                    <option value="1">4º Aula - 9:50 até 10:40</option>
-                                    <option value="2">5º Aula - 10:40 até 11:30</option>
-                                    <option value="3">6º Aula - 11:30 até 12:20</option>
-                                    <option value="1">7º Aula - 13:30 até 14:20</option>
-                                    <option value="2">8º Aula - 14:20 até 15:10</option>
-                                    <option value="3">9º Aula - 15:10 até 15:50</option>
+                                    <option value="1" <?= $disponivel[1]?? ''; ?>>1º Aula - 7:00 até 7:50</option>
+                                    <option value="2" <?= $disponivel[2]?? ''; ?>>2º Aula - 7:50 até 8:40</option>
+                                    <option value="3" <?= $disponivel[3]?? ''; ?>>3º Aula - 8:40 até 9:30</option>
+                                    <option value="4" <?= $disponivel[4]?? ''; ?>>4º Aula - 9:50 até 10:40</option>
+                                    <option value="5" <?= $disponivel[5]?? ''; ?>>5º Aula - 10:40 até 11:30</option>
+                                    <option value="6" <?= $disponivel[6]?? ''; ?>>6º Aula - 11:30 até 12:20</option>
+                                    <option value="7" <?= $disponivel[7]?? ''; ?>>7º Aula - 13:30 até 14:20</option>
+                                    <option value="8" <?= $disponivel[8]?? ''; ?>>8º Aula - 14:20 até 15:10</option>
+                                    <option value="9" <?= $disponivel[9]?? ''; ?>>9º Aula - 15:10 até 15:50</option>
                                 </select>
                                 <label>Selecione o horário</label>
                             </div>
@@ -307,9 +330,10 @@ if (isset($_GET['id_lab'])) {
         <input type="hidden" value="<?= $_SESSION['session_login_id'] ?? ''; ?>" name="id_conta_agendamento">
     </form>
 </div>
+<!-- Modal erro Solicitação Structure -->
 <div id="modalErroPedido" class="modal">
     <div class="modal-content">
-        <h4>Erro - Não foi possível realizar o pedido</h4>
+        <h4 class="cyan-text text-darken-1">Erro - Não foi possível realizar o pedido</h4>
         <p>Não conseguimos realizar seu pedido tente novamente mais tarde.
             Desculpe o incomodo.
         </p>
@@ -318,11 +342,56 @@ if (isset($_GET['id_lab'])) {
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
     </div>
 </div>
+<!-- Modal exito Solicitação Structure -->
 <div id="modalExitoPedido" class="modal">
     <div class="modal-content">
-        <h4>Exito - Seu pedido foi realizado com sucesso</h4>
+        <h4 class="cyan-text text-darken-1">Exito - Seu pedido foi realizado com sucesso</h4>
         <p>A aprovação do seu pedido esta em analise, aguarde até a confimação.
         </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+    </div>
+</div>
+<!-- Modal meus agendamentos Structure -->
+<div id="modalMeusAgendamentos" class="modal" style="width:95% !important;">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1">Meus agendamentos</h4>
+        <table class="responsive-table">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Horario</th>
+                <th>Laboratorio</th>
+                <th>Ano</th>
+                <th>Curso</th>
+                <th>Estado do agendamento</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <?php
+            foreach ($arrayAgendamentos as $arrayAgendamentos){
+                echo "<tr>";
+                echo "<td><p>".substr($arrayAgendamentos['DATA'],0,2)."/".substr($arrayAgendamentos['DATA'],2,2)."/".substr($arrayAgendamentos['DATA'],4,4)."</p></td>";
+                echo "<td><p>".getHorarioByID($arrayAgendamentos['HORARIO'])."</p></td>";
+                echo "<td><p>".getNomeLabByID($arrayAgendamentos['FK_O_A_ID'])."</p></td>";
+                echo "<td><p>".$arrayAgendamentos['ANO_CURSO']."</p></td>";
+                echo "<td><p>".$arrayAgendamentos['CURSO']."</p></td>";
+                if($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "confirmado") {
+                    echo "<td><p class='green-text text-darken-2'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
+                }else if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "negado"){
+                    echo "<td> <p class='red-text text-darken-1'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
+                }else{
+                    echo "<td><p class='blue-grey-text'>" . $arrayAgendamentos['ESTADO_AGENDAMENTO'] . "</p></td>";
+                }
+                echo "</tr>";
+            }
+            ?>
+
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
@@ -342,12 +411,13 @@ if (isset($_GET['id_lab'])) {
     $(document).ready(function () {
         $('.sidenav').sidenav();
         $('.collapsible').collapsible();
+        $('.modal').modal();
         $('select').formSelect();
 
         var sessao_lab = <?=$_SESSION['id_lab'] ?? '"nope"';?>;
 
         $('#modalSolicitacao').modal({
-            endingTop: '1%',
+            //endingTop: '1%',
             onOpenStart: function () {
                 window.history.pushState("", "", window.location.href.replace(/&pedido/g, ''));
             }
@@ -362,6 +432,7 @@ if (isset($_GET['id_lab'])) {
         $('#modalErroPedido').modal();
         $('#modalExitoPedido').modal();
 
+
         if (sessao_pedido == "erro") {
             $('#modalErroPedido').modal('open');
             sessao_pedido = null;
@@ -370,6 +441,9 @@ if (isset($_GET['id_lab'])) {
             sessao_pedido = null;
         }
     });
+
+
+
 
     $('#selec1_1,#selec1_2,#selec1_3').change(function () {
         if ($("#selec1_1 option:selected").text() !== "---" || $("#selec1_2 option:selected").text() !== "---" || $("#selec1_3 option:selected").text() !== "---") {

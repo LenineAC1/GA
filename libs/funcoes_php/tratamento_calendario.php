@@ -176,7 +176,7 @@ function MostreCalendario( $mes  , $lab)
                 {
                     foreach ($dias_marcados as $chave => $valor) {
                         $str_dias_marcados = $dias_marcados[$chave];
-                        $query_limite = $conexao_pdo->prepare("SELECT DATA FROM agendamento GROUP BY DATA HAVING COUNT(*) = 6 "); //prepara a query de seleção onde as informações são correspondentes
+                        $query_limite = $conexao_pdo->prepare("SELECT DATA FROM agendamento GROUP BY DATA HAVING COUNT(*) = 9 "); //prepara a query de seleção onde as informações são correspondentes
                         $query_limite->execute();
                         $queryResult_limite = $query_limite->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
                         if (substr($queryResult_limite['DATA'], 0, 2) == ($diacorrente + 1)) {
@@ -207,8 +207,7 @@ function MostreCalendario( $mes  , $lab)
 
             if( $diacorrente + 1 <= $numero_dias )
             {
-                if( $coluna < $diasemana && $linha == 0)
-                {
+                if( $coluna < $diasemana && $linha == 0) {
                     echo " ";
                 }
                 else
