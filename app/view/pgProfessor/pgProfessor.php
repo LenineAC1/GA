@@ -6,7 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/GA/libs/funcoes_php/tratamento_calend
 
 $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
 
-if(session_id() == '') {
+if (session_id() == '') {
     session_start();
 }
 if (!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor") {
@@ -18,25 +18,26 @@ if (isset($_GET['id_lab'])) {
 } else {
 }
 $disponivel = array(
-        1=>'',2=>'',3=>'',4=>'',5=>'',6=>'',7=>'',8=>'',9=>''
+    1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '', 7 => '', 8 => '', 9 => ''
 );
-if(isset($_SESSION['id_lab'])&&isset($_GET['mes'])&&isset($_GET['dia'])){
-    $dataCompleta = dataCompletaPTBR($_GET['dia'],$_GET['mes'],null);
+if (isset($_SESSION['id_lab']) && isset($_GET['mes']) && isset($_GET['dia'])) {
+    $dataCompleta = dataCompletaPTBR($_GET['dia'], $_GET['mes'], null);
     $query_select_disponivel = $conexao_pdo->prepare("SELECT HORARIO FROM `agendamento` WHERE `DATA` = :dataAgendamento AND `FK_O_A_ID` = :idLab"); //prepara a query de seleção onde as informações são correspondentes
     $query_select_disponivel->bindParam(':dataAgendamento', $dataCompleta);
     $query_select_disponivel->bindParam(':idLab', $_SESSION['id_lab']);
 
-    if ($query_select_disponivel->execute()){
+    if ($query_select_disponivel->execute()) {
         $queryResult = $query_select_disponivel->fetchAll(PDO::FETCH_COLUMN, 0); // passa resultado da query para um array
         if (count($queryResult) >= 1) {
-            foreach ($queryResult as $array => $key){
-                    $disponivel[$key] = "disabled";
+            foreach ($queryResult as $array => $key) {
+                $disponivel[$key] = "disabled";
             }
         }
     }
 }
 
-$arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
+$arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
+
 
 ?>
 
@@ -224,7 +225,7 @@ $arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
                 } else {
                     echo getNomeLabByID($_SESSION['id_lab']);
                 } ?></span><br><!--Nome do lab solicitado-->
-            Data: <span><?= dataCompletaPTBR($_GET['dia'],$_GET['mes'],"/");?></span>
+            Data: <span><?= dataCompletaPTBR($_GET['dia'], $_GET['mes'], "/"); ?></span>
             <!--Data solicitada-->
             <ul class="collapsible">
                 <li>
@@ -257,15 +258,15 @@ $arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
                             <div class="input-field col s6">
                                 <select name="horario_manha" form="form_pedido" id="selec1_3">
                                     <option value="" selected>---</option>
-                                    <option value="1" <?= $disponivel[1]?? ''; ?>>1º Aula - 7:00 até 7:50</option>
-                                    <option value="2" <?= $disponivel[2]?? ''; ?>>2º Aula - 7:50 até 8:40</option>
-                                    <option value="3" <?= $disponivel[3]?? ''; ?>>3º Aula - 8:40 até 9:30</option>
-                                    <option value="4" <?= $disponivel[4]?? ''; ?>>4º Aula - 9:50 até 10:40</option>
-                                    <option value="5" <?= $disponivel[5]?? ''; ?>>5º Aula - 10:40 até 11:30</option>
-                                    <option value="6" <?= $disponivel[6]?? ''; ?>>6º Aula - 11:30 até 12:20</option>
-                                    <option value="7" <?= $disponivel[7]?? ''; ?>>7º Aula - 13:30 até 14:20</option>
-                                    <option value="8" <?= $disponivel[8]?? ''; ?>>8º Aula - 14:20 até 15:10</option>
-                                    <option value="9" <?= $disponivel[9]?? ''; ?>>9º Aula - 15:10 até 15:50</option>
+                                    <option value="1" <?= $disponivel[1] ?? ''; ?>>1º Aula - 7:00 até 7:50</option>
+                                    <option value="2" <?= $disponivel[2] ?? ''; ?>>2º Aula - 7:50 até 8:40</option>
+                                    <option value="3" <?= $disponivel[3] ?? ''; ?>>3º Aula - 8:40 até 9:30</option>
+                                    <option value="4" <?= $disponivel[4] ?? ''; ?>>4º Aula - 9:50 até 10:40</option>
+                                    <option value="5" <?= $disponivel[5] ?? ''; ?>>5º Aula - 10:40 até 11:30</option>
+                                    <option value="6" <?= $disponivel[6] ?? ''; ?>>6º Aula - 11:30 até 12:20</option>
+                                    <option value="7" <?= $disponivel[7] ?? ''; ?>>7º Aula - 13:30 até 14:20</option>
+                                    <option value="8" <?= $disponivel[8] ?? ''; ?>>8º Aula - 14:20 até 15:10</option>
+                                    <option value="9" <?= $disponivel[9] ?? ''; ?>>9º Aula - 15:10 até 15:50</option>
                                 </select>
                                 <label>Selecione o horário</label>
                             </div>
@@ -372,21 +373,29 @@ $arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
             <tbody>
 
             <?php
-            foreach ($arrayAgendamentos as $arrayAgendamentos){
-                echo "<tr>";
-                echo "<td><p>".substr($arrayAgendamentos['DATA'],0,2)."/".substr($arrayAgendamentos['DATA'],2,2)."/".substr($arrayAgendamentos['DATA'],4,4)."</p></td>";
-                echo "<td><p>".getHorarioByID($arrayAgendamentos['HORARIO'])."</p></td>";
-                echo "<td><p>".getNomeLabByID($arrayAgendamentos['FK_O_A_ID'])."</p></td>";
-                echo "<td><p>".$arrayAgendamentos['ANO_CURSO']."</p></td>";
-                echo "<td><p>".$arrayAgendamentos['CURSO']."</p></td>";
-                if($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "confirmado") {
-                    echo "<td><p class='green-text text-darken-2'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
-                }else if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "negado"){
-                    echo "<td> <p class='red-text text-darken-1'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
-                }else{
-                    echo "<td><p class='blue-grey-text'>" . $arrayAgendamentos['ESTADO_AGENDAMENTO'] . "</p></td>";
+            foreach ($arrayAgendamentos as $arrayAgendamentos) {
+                // checa se o agendamento ja passou da data atual
+                $dataAgendamento = substr($arrayAgendamentos['DATA'], 4, 4)."-". substr($arrayAgendamentos['DATA'], 2, 2) . "-" . substr($arrayAgendamentos['DATA'],0,2);
+                $timestamp_dt 	= strtotime($dataAgendamento); // converte para timestamp Unix
+                $timestamp_dt_expira	= strtotime(date("Y-m-d"));
+                if ($timestamp_dt < $timestamp_dt_expira){
+                }else {
+                    echo "<tr>";
+
+                    echo "<td><p>" . substr($arrayAgendamentos['DATA'], 0, 2) . "/" . substr($arrayAgendamentos['DATA'], 2, 2) . "/" . substr($arrayAgendamentos['DATA'], 4, 4) . "</p></td>";
+                    echo "<td><p>" . getHorarioByID($arrayAgendamentos['HORARIO']) . "</p></td>";
+                    echo "<td><p>" . getNomeLabByID($arrayAgendamentos['FK_O_A_ID']) . "</p></td>";
+                    echo "<td><p>" . $arrayAgendamentos['ANO_CURSO'] . "</p></td>";
+                    echo "<td><p>" . $arrayAgendamentos['CURSO'] . "</p></td>";
+                    if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "confirmado") {
+                        echo "<td><p class='green-text text-darken-2'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
+                    } else if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "negado") {
+                        echo "<td> <p class='red-text text-darken-1'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
+                    } else {
+                        echo "<td><p class='blue-grey-text'>" . $arrayAgendamentos['ESTADO_AGENDAMENTO'] . "</p></td>";
+                    }
+                    echo "</tr>";
                 }
-                echo "</tr>";
             }
             ?>
 
@@ -398,7 +407,19 @@ $arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
     </div>
 </div>
 <footer>
-
+    <?php
+    if (isset($_GET['dia']) && isset($_GET['mes'])) {
+        $dataEscolhidaCompleta = dataCompletaPTBR($_GET['dia'], $_GET['mes'], "/");
+        foreach ($_SESSION['datasProibidas'] as $key => $value) {
+            if ($value == $dataEscolhidaCompleta) {//checa se a a data escolhida é valida para agendamento
+                $permissaoNewPedido = "negado";
+                break;
+            } else {
+                $permissaoNewPedido = "permitido";
+            }
+        }
+    }
+    ?>
 </footer>
 
 <!--JavaScript at end of body for optimized loading-->
@@ -415,6 +436,8 @@ $arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
         $('select').formSelect();
 
         var sessao_lab = <?=$_SESSION['id_lab'] ?? '"nope"';?>;
+        var permissao_dia = "<?=$permissaoNewPedido ?? 'negado';?>";
+
 
         $('#modalSolicitacao').modal({
             //endingTop: '1%',
@@ -423,7 +446,7 @@ $arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
             }
         });
 
-        if (window.location.href.indexOf("pedido") > -1 && sessao_lab !== "nope") {
+        if (window.location.href.indexOf("pedido") > -1 && sessao_lab !== "nope" && permissao_dia == "permitido") {
             $('#modalSolicitacao').modal('open');
         }
 
@@ -441,8 +464,6 @@ $arrayAgendamentos =  getAgendamendos($_SESSION['session_login_id']);
             sessao_pedido = null;
         }
     });
-
-
 
 
     $('#selec1_1,#selec1_2,#selec1_3').change(function () {
