@@ -28,14 +28,15 @@ if (isset($_POST['curso_noite'])&&isset($_POST['ano_noite'])&&isset($_POST['hora
         "curso" => $_POST['curso_noite'],
         "ano" => $_POST['ano_noite'],
         "horario" => $_POST['horario_noite'],
-        "data" => sprintf("%02d",$_POST['dia_agendamento']).$_POST['mes_agendamento'].date('y'),
+        "data" => dataCompletaPTBR($_POST['dia_agendamento'],$_POST['mes_agendamento'],null),
         "id_conta" => $_POST['id_conta_agendamento'],
         "id_lab" => $_POST['lab_agendamento'],
     );
 }
 
+
+if(isset($_SESSION['PERMISSAOPEDIDO'])&&$_SESSION['PERMISSAOPEDIDO']=='permitido'){
 if (isset($post_manha)){
-    var_dump($post_manha);
     //checa se ja tem agendado
     $query_select_igual = $conexao_pdo->prepare("SELECT * FROM `agendamento` WHERE `HORARIO` = :horario AND `FK_Conta_ID` = :idConta AND `DATA` = :dataAgendamento AND `FK_O_A_ID` = :idLab"); //prepara a query de seleção onde as informações são correspondentes
     $query_select_igual->bindParam(':horario', $post_manha['horario']);
@@ -106,6 +107,10 @@ if (isset($post_manha)){
         header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
         $_SESSION['retorno_pedido']='erro';
     }
+}else{
+    header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
+    $_SESSION['retorno_pedido']='erro';
+}
 }else{
     header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
     $_SESSION['retorno_pedido']='erro';

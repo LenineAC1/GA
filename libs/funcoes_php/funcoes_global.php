@@ -6,6 +6,8 @@
  * Time: 18:20
  */
 
+date_default_timezone_set('America/Sao_Paulo'); // Defina data como do Brasil/são paulo
+
 //Inicio: Realizar conexão com DB
 function conexao_pdo($nome_db, $user_db, $senha_db ){
 

@@ -17,9 +17,11 @@ if (isset($_GET['id_lab'])) {
     $_SESSION['id_lab'] = $_GET['id_lab'];
 } else {
 }
+
 $disponivel = array(
     1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '', 7 => '', 8 => '', 9 => ''
 );
+
 if (isset($_SESSION['id_lab']) && isset($_GET['mes']) && isset($_GET['dia'])) {
     $dataCompleta = dataCompletaPTBR($_GET['dia'], $_GET['mes'], null);
     $query_select_disponivel = $conexao_pdo->prepare("SELECT HORARIO FROM `agendamento` WHERE `DATA` = :dataAgendamento AND `FK_O_A_ID` = :idLab"); //prepara a query de seleção onde as informações são correspondentes
@@ -412,16 +414,16 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         $dataEscolhidaCompleta = dataCompletaPTBR($_GET['dia'], $_GET['mes'], "/");
         foreach ($_SESSION['datasProibidas'] as $key => $value) {
             if ($value == $dataEscolhidaCompleta) {//checa se a a data escolhida é valida para agendamento
-                $permissaoNewPedido = "negado";
+                $_SESSION['PERMISSAOPEDIDO'] = "negado";
                 break;
             } else {
-                $permissaoNewPedido = "permitido";
+                $_SESSION['PERMISSAOPEDIDO'] = "permitido";
             }
         }
     }
     ?>
 </footer>
-
+<?= date('d')?>
 <!--JavaScript at end of body for optimized loading-->
 <script
         src="https://code.jquery.com/jquery-3.3.1.js"
@@ -436,7 +438,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         $('select').formSelect();
 
         var sessao_lab = <?=$_SESSION['id_lab'] ?? '"nope"';?>;
-        var permissao_dia = "<?=$permissaoNewPedido ?? 'negado';?>";
+        var permissao_dia = "<?=$_SESSION['PERMISSAOPEDIDO'] ?? 'negado';?>";
 
 
         $('#modalSolicitacao').modal({
