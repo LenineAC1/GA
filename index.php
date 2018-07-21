@@ -76,7 +76,7 @@ if (isset($_SESSION['session_login'])) { //Testa se ja existe uma sessão de log
   <a class="waves-effect waves-light btn modal-trigger" id="abrir_modal" href="#modalErro" style="display: none;">Modal</a>
 
   <!-- Modal Erro Structure -->
-  <div id="modalErro" class="modal">
+  <div id="modalErro" class="modal retorno">
     <div class="modal-content">
       <h4>Error 1 - Não foi possível realizar o Login</h4>
       <p>Não conseguimos realizar seu login tente novamente mais tarde.

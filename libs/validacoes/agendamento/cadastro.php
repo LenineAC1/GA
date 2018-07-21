@@ -50,7 +50,6 @@ if (isset($post_manha)){
             header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
             $_SESSION['retorno_pedido']='erro';
         }else{
-            echo "deu certo";
             $query_insert = $conexao_pdo->prepare("INSERT INTO `agendamento` (`ID`, `HORARIO`, `CURSO`, `ANO_CURSO`, `ESTADO_AGENDAMENTO`, `FK_O_A_ID`, `FK_Conta_ID`, `DATA`) VALUES (NULL, :horario, :curso, :ano, 'em analise', :idLab, :idConta, :dataAgendamento);"); //prepara a query de seleção onde as informações são correspondentes
             $query_insert->bindParam(':horario', $post_manha['horario']);
             $query_insert->bindParam(':curso', $post_manha['curso']);

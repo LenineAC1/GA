@@ -12,15 +12,19 @@ if (session_id() == '') {
 if (!isset($_SESSION['session_login']) || $_SESSION['session_tipo'] != "professor") {
     $_SESSION['erro_login'] = 1;
     header("location: $raiz");
-}
+} //so continua na pagina se estiver logado
+
 if (isset($_GET['id_lab'])) {
     $_SESSION['id_lab'] = $_GET['id_lab'];
-} else {
+}
+
+if(isset($_GET['idAgenFeed'])){
+    $_SESSION['idAgenFeed'] = $_GET['idAgenFeed'];
 }
 
 $disponivel = array(
     1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '', 7 => '', 8 => '', 9 => ''
-);
+); // aulas disponives
 
 if (isset($_SESSION['id_lab']) && isset($_GET['mes']) && isset($_GET['dia'])) {
     $dataCompleta = dataCompletaPTBR($_GET['dia'], $_GET['mes'], null);
@@ -36,7 +40,7 @@ if (isset($_SESSION['id_lab']) && isset($_GET['mes']) && isset($_GET['dia'])) {
             }
         }
     }
-}
+}//define oque sera disabilitado na escolha de pedido
 
 $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
 
@@ -57,22 +61,9 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
           media="screen,projection"/>
 
     <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="widtd=device-widtd, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 </head>
-
-<style>
-    header, main, footer {
-        padding-left: 300px;
-    }
-
-    @media only screen and (max-width: 992px) {
-        header, main, footer {
-            padding-left: 0;
-        }
-    }
-</style>
-
 <body>
 
 <nav class="hide-on-large-only red darken-3">
@@ -94,10 +85,10 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         </li>
         <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
 
-        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1"
+        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1 pulse"
                                                              data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
 
-        <li><a href="#modalMeusAgendamentos" class="modal-trigger">MEUS AGENDAMENTOS</a></li>
+        <li><a href="#modalMeusAgendamentos" class="modal-trigger" id="abrirAgendamentos">MEUS AGENDAMENTOS</a></li>
 
         <div class="divider"></div>
 
@@ -187,11 +178,13 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             </div>
         </div>
     </div>
+
     <?php
     if (isset($_SESSION['id_lab'])) {
         MostreCalendario($view_mes_atual, $_SESSION['id_lab']);
     }
     ?>
+
 </main>
 
 <!-- Modal Notificações Structure -->
@@ -219,7 +212,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
 
 <!-- Modal Solicitação de laboratorio Structure -->
 <div id="modalSolicitacao" class="modal modal-fixed-footer" style="min-height: 98%;">
-    <form id="form_pedido" action="<?= $raiz . "/libs/validacoes/pedido/cadastro.php" ?>" method="post">
+    <form id="form_pedido" action="<?= $raiz . "/libs/validacoes/agendamento/cadastro.php" ?>" method="post">
         <div class="modal-content">
             <h4 class="cyan-text text-darken-1">Solicitar agendamento</h4>
             Nome: <span><?php if (!isset($_SESSION['id_lab'])) {
@@ -236,7 +229,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     </div>
                     <div class="collapsible-body cyan-text text-darken-1">
                         <div class="row">
-                            <div class="input-field col s6">
+                            <div class="input-field col s12">
                                 <select name="curso_manha" form="form_pedido" id="selec1_1">
                                     <option value="" selected>---</option>
                                     <option value="Ensino Médio">Ensino Médio</option>
@@ -248,7 +241,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                                 </select>
                                 <label>Selecione um Curso</label>
                             </div>
-                            <div class="input-field col s6">
+                            <div class="input-field col s12 m6">
                                 <select name="ano_manha" form="form_pedido" id="selec1_2">
                                     <option value="" selected>---</option>
                                     <option value="1º ano">1º ano</option>
@@ -257,18 +250,18 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                                 </select>
                                 <label>Selecione o Ano</label>
                             </div>
-                            <div class="input-field col s6">
+                            <div class="input-field col s12 m6">
                                 <select name="horario_manha" form="form_pedido" id="selec1_3">
                                     <option value="" selected>---</option>
-                                    <option value="1" <?= $disponivel[1] ?? ''; ?>>1º Aula - 7:00 até 7:50</option>
-                                    <option value="2" <?= $disponivel[2] ?? ''; ?>>2º Aula - 7:50 até 8:40</option>
-                                    <option value="3" <?= $disponivel[3] ?? ''; ?>>3º Aula - 8:40 até 9:30</option>
-                                    <option value="4" <?= $disponivel[4] ?? ''; ?>>4º Aula - 9:50 até 10:40</option>
-                                    <option value="5" <?= $disponivel[5] ?? ''; ?>>5º Aula - 10:40 até 11:30</option>
-                                    <option value="6" <?= $disponivel[6] ?? ''; ?>>6º Aula - 11:30 até 12:20</option>
-                                    <option value="7" <?= $disponivel[7] ?? ''; ?>>7º Aula - 13:30 até 14:20</option>
-                                    <option value="8" <?= $disponivel[8] ?? ''; ?>>8º Aula - 14:20 até 15:10</option>
-                                    <option value="9" <?= $disponivel[9] ?? ''; ?>>9º Aula - 15:10 até 15:50</option>
+                                    <option value="1" <?= $disponivel[1] ?? ''; ?>>1º Aula</option>
+                                    <option value="2" <?= $disponivel[2] ?? ''; ?>>2º Aula</option>
+                                    <option value="3" <?= $disponivel[3] ?? ''; ?>>3º Aula</option>
+                                    <option value="4" <?= $disponivel[4] ?? ''; ?>>4º Aula</option>
+                                    <option value="5" <?= $disponivel[5] ?? ''; ?>>5º Aula</option>
+                                    <option value="6" <?= $disponivel[6] ?? ''; ?>>6º Aula</option>
+                                    <option value="7" <?= $disponivel[7] ?? ''; ?>>7º Aula</option>
+                                    <option value="8" <?= $disponivel[8] ?? ''; ?>>8º Aula</option>
+                                    <option value="9" <?= $disponivel[9] ?? ''; ?>>9º Aula</option>
                                 </select>
                                 <label>Selecione o horário</label>
                             </div>
@@ -333,8 +326,9 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <input type="hidden" value="<?= $_SESSION['session_login_id'] ?? ''; ?>" name="id_conta_agendamento">
     </form>
 </div>
+
 <!-- Modal erro Solicitação Structure -->
-<div id="modalErroPedido" class="modal">
+<div id="modalErroPedido" class="modal retorno">
     <div class="modal-content">
         <h4 class="cyan-text text-darken-1">Erro - Não foi possível realizar o pedido</h4>
         <p>Não conseguimos realizar seu pedido tente novamente mais tarde.
@@ -345,8 +339,9 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
     </div>
 </div>
+
 <!-- Modal exito Solicitação Structure -->
-<div id="modalExitoPedido" class="modal">
+<div id="modalExitoPedido" class="modal retorno">
     <div class="modal-content">
         <h4 class="cyan-text text-darken-1">Exito - Seu pedido foi realizado com sucesso</h4>
         <p>A aprovação do seu pedido esta em analise, aguarde até a confimação.
@@ -356,11 +351,38 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
     </div>
 </div>
-<!-- Modal meus agendamentos Structure -->
-<div id="modalMeusAgendamentos" class="modal" style="width:95% !important;">
+
+<!-- Modal erro FEEDBACK Structure -->
+<div id="modalErroFeedback" class="modal retorno">
     <div class="modal-content">
-        <h4 class="cyan-text text-darken-1">Meus agendamentos</h4>
-        <table class="responsive-table">
+        <h4 class="cyan-text text-darken-1">Erro - Não foi possível enviar seu feeback</h4>
+        <p>Não conseguimos realizar seu pedido tente novamente mais tarde.
+            Desculpe o incomodo.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+    </div>
+</div>
+
+<!-- Modal exito FEEDBACK Structure -->
+<div id="modalExitoFeedback" class="modal retorno">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1">Exito - Seu feedback foi enviado com sucesso</h4>
+        <p>Seu feedback foi enviado para a coordenação, obrigado por sua ajuda.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+    </div>
+</div>
+
+
+<!-- Modal meus agendamentos Structure -->
+<div id="modalMeusAgendamentos" class="modal" style="width:100% !important; height: 70%;">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1" style="margin: 3% auto 3% auto">Meus agendamentos</h4>
+        <table class="centered responsive-table">
             <thead>
             <tr>
                 <th>Data</th>
@@ -368,7 +390,8 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 <th>Laboratorio</th>
                 <th>Ano</th>
                 <th>Curso</th>
-                <th>Estado do agendamento</th>
+                <th>Estado</th>
+                <th>Feedback</th>
             </tr>
             </thead>
 
@@ -377,24 +400,33 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             <?php
             foreach ($arrayAgendamentos as $arrayAgendamentos) {
                 // checa se o agendamento ja passou da data atual
+
                 $dataAgendamento = substr($arrayAgendamentos['DATA'], 4, 4)."-". substr($arrayAgendamentos['DATA'], 2, 2) . "-" . substr($arrayAgendamentos['DATA'],0,2);
                 $timestamp_dt 	= strtotime($dataAgendamento); // converte para timestamp Unix
                 $timestamp_dt_expira	= strtotime(date("Y-m-d"));
                 if ($timestamp_dt < $timestamp_dt_expira){
                 }else {
-                    echo "<tr>";
-
-                    echo "<td><p>" . substr($arrayAgendamentos['DATA'], 0, 2) . "/" . substr($arrayAgendamentos['DATA'], 2, 2) . "/" . substr($arrayAgendamentos['DATA'], 4, 4) . "</p></td>";
-                    echo "<td><p>" . getHorarioByID($arrayAgendamentos['HORARIO']) . "</p></td>";
-                    echo "<td><p>" . getNomeLabByID($arrayAgendamentos['FK_O_A_ID']) . "</p></td>";
-                    echo "<td><p>" . $arrayAgendamentos['ANO_CURSO'] . "</p></td>";
-                    echo "<td><p>" . $arrayAgendamentos['CURSO'] . "</p></td>";
+                    if($arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'em analise' && !getFeedbackByID($arrayAgendamentos['ID'])) {
+                        echo "<tr data-url=?idAgenFeed=" . $arrayAgendamentos['ID'] . " class='trAgenFeed hoverable'>";
+                    }else{
+                        echo "<tr>";
+                    }
+                    echo "<td>".substr($arrayAgendamentos['DATA'], 0, 2) . "/" . substr($arrayAgendamentos['DATA'], 2, 2) . "/" . substr($arrayAgendamentos['DATA'], 4, 4) . "</td>";
+                    echo "<td>" . getHorarioByID($arrayAgendamentos['HORARIO']) . "</td>";
+                    echo "<td>" . getNomeLabByID($arrayAgendamentos['FK_O_A_ID']) . "</td>";
+                    echo "<td>" . $arrayAgendamentos['ANO_CURSO'] . "</td>";
+                    echo "<td>" . $arrayAgendamentos['CURSO'] . "</td>";
                     if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "confirmado") {
-                        echo "<td><p class='green-text text-darken-2'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
+                        echo "<td><i class='small material-icons green-text text-darken-2'>check</i></td>";
                     } else if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "negado") {
-                        echo "<td> <p class='red-text text-darken-1'>" . ucfirst($arrayAgendamentos['ESTADO_AGENDAMENTO']) . "</p></td>";
+                        echo "<td><i class='small material-icons red-text text-darken-2'>clear</i></td>";
                     } else {
-                        echo "<td><p class='blue-grey-text'>" . $arrayAgendamentos['ESTADO_AGENDAMENTO'] . "</p></td>";
+                        echo "<td><i class='small material-icons yellow-text text-darken-1'>cached</i></td>";
+                    }
+                    if($arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'em analise' && !getFeedbackByID($arrayAgendamentos['ID'])) {
+                        echo '<td><i class="small material-icons cyan-text text-darken-1">feedback</i></a></td>';
+                    }else{
+                        echo '<td><i class="small material-icons grey-text text-lighten-2">feedback</i></a></td>';
                     }
                     echo "</tr>";
                 }
@@ -408,6 +440,45 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
     </div>
 </div>
+
+<!-- Estrutura modal feedback -->
+<div id="modalFeedback" class="modal">
+    <form id="form_feedback" action="<?= $raiz . "/libs/validacoes/agendamento/feedback.php" ?>" method="post">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1" style="margin: 3% auto 3% auto">Feedback de uso</h4>
+        <div class="divider"></div>
+        <div class="section">
+            <div class="row">
+            <div class="input-field col s12">
+                <select name="select_feedback" form="form_feedback">
+                    <option value="nulo" selected>---</option>
+                    <option value="1">Ótimo, sem problemas durante o uso.</option>
+                    <option value="2" >Mediano, alguns componentes estavam comprometidos.</option>
+                    <option value="3">Ruim, o uso foi afetado negativamente.</option>
+                </select>
+                <label>Condição de uso do laboratório(Opcional)</label>
+            </div>
+        </div>
+        </div>
+            <div class="input-field col s12">
+                <textarea id="textarea_feedback" class="materialize-textarea" name="textarea_feedback" form="form_feedback"></textarea>
+                <label for="textarea_feedback">Escreva seu feedback de uso</label>
+            </div>
+        </div>
+
+        <?php
+        $agendamentoFeedback = getAgendamentoByID($_SESSION['idAgenFeed']);
+        ?>
+    <div class="modal-footer">
+        <button type="submit" class="modal-close waves-effect waves-green btn-flat disabled" id="submit_feedback">Enviar feedback
+        </button>
+    </div>
+        <input type="hidden" value="<?= $_SESSION['session_login_id'] ?? ''; ?>" name="id_conta_feedback">
+        <input type="hidden" value="<?= $agendamentoFeedback['ID'] ?? ''; ?>" name="id_agendamento_feedback">
+    </form>
+    </div>
+
+
 <footer>
     <?php
     if (isset($_GET['dia']) && isset($_GET['mes'])) {
@@ -423,23 +494,31 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
     }
     ?>
 </footer>
-<?= date('d')?>
 <!--JavaScript at end of body for optimized loading-->
-<script
-        src="https://code.jquery.com/jquery-3.3.1.js"
-        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
 <script type="text/javascript" src="<?= $raiz ?>/libs/materialize/js/materialize.js"></script>
+
 <script type="text/javascript">
+
     $(document).ready(function () {
         $('.sidenav').sidenav();
         $('.collapsible').collapsible();
         $('.modal').modal();
         $('select').formSelect();
+        $('textarea').characterCounter();
+
+
+
+        //TODA ESSA BAGUNÇA VAI SER PASSADO PRA UM UNICO ARQUIVO PRA FICAR MAIS LIMPO
+
+
+
+
 
         var sessao_lab = <?=$_SESSION['id_lab'] ?? '"nope"';?>;
         var permissao_dia = "<?=$_SESSION['PERMISSAOPEDIDO'] ?? 'negado';?>";
-
+        var sessao_feed = "<?=$_SESSION['idAgenFeed'] ?? 'nope';?>";
 
         $('#modalSolicitacao').modal({
             //endingTop: '1%',
@@ -453,21 +532,55 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         }
 
         var sessao_pedido = '<?=$_SESSION['retorno_pedido'] ?? '"nope"';?>';
+        var sessao_retorno_feed = "<?=$_SESSION['retorno_feedback'] ?? 'nope';?>";
 
         $('#modalErroPedido').modal();
         $('#modalExitoPedido').modal();
+        $('#modalExitoFeedback').modal();
+        $('#modalErroFeedback').modal();
+        $('#modalFeedback').modal({
+            //endingTop: '1%',
+            onOpenStart: function () {
+                window.history.pushState("", "", window.location.href.replace(/[?]idAgenFeed(.*$)/g, ''));
 
+
+            }
+        });
 
         if (sessao_pedido == "erro") {
             $('#modalErroPedido').modal('open');
             sessao_pedido = null;
-        } else if (sessao_pedido == "exito") {
+        }
+        else if (sessao_pedido == "exito") {
             $('#modalExitoPedido').modal('open');
             sessao_pedido = null;
         }
+
+        if (sessao_retorno_feed == "erro") {
+            $('#modalErroFeedback').modal('open');
+            sessao_retorno_feed = null;
+        }
+        else if (sessao_retorno_feed == "exito") {
+            $('#modalExitoFeedback').modal('open');
+            sessao_retorno_feed = null;
+        }
+
+        if (sessao_feed != "nope"){
+            $('#modalFeedback').modal('open');
+        }
+
+        $('.trAgenFeed').click(function(){
+
+            window.location = $(this).data('url');
+
+
+        });
+
     });
 
 
+
+    //--------------Valida se posso ou nao enviar pedido-------------//
     $('#selec1_1,#selec1_2,#selec1_3').change(function () {
         if ($("#selec1_1 option:selected").text() !== "---" || $("#selec1_2 option:selected").text() !== "---" || $("#selec1_3 option:selected").text() !== "---") {
 
@@ -516,11 +629,28 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             $('select').formSelect();
         }
     });
-
+    //---------------------------------------------------------------//
+    //--------------Valida se posso ou nao enviar pedido-------------//
+    $('#textarea_feedback').bind('input propertychange',function () {
+        if ($('#textarea_feedback').val().length > 0){
+            $('#submit_feedback').removeClass("disabled");
+        }else{
+            $('#submit_feedback').addClass("disabled");
+        }
+    });
+    // ---------------------------------------------------------------//
 </script>
-<?php if (isset($_SESSION['retorno_pedido'])) {
+<?php
+if (isset($_SESSION['retorno_pedido'])) {
     unset($_SESSION['retorno_pedido']);
-} ?>
+}
+if(isset($_SESSION['retorno_feedback'])){
+    unset($_SESSION['retorno_feedback']);
+}
+if (isset($_SESSION['idAgenFeed'])) {
+    unset($_SESSION['idAgenFeed']);
+}
+?>
 </body>
 </html>
 

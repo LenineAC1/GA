@@ -44,3 +44,66 @@ p{
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     opacity: .8;
 }
+
+.trAgenFeed{
+    cursor: pointer;
+}
+/* label focus color */
+.input-field input[type=text]:focus + label, .materialize-textarea:focus:not([readonly]) + label {
+    color: #00acc1 !important;
+}
+
+/* label underline focus color */
+.input-field input[type=text]:focus, .materialize-textarea:focus:not([readonly]) {
+    border-bottom: 1px solid #00acc1 !important;
+    box-shadow: 0 1px 0 0 #00acc1 !important;
+}
+
+.dropdown-content li>span {
+    color: #00acc1 !important;
+}
+
+.dropdown-content li>a {
+    color: #00acc1 !important;
+}
+
+.select-content li>span {
+    color: #00acc1 !important;
+}
+
+.select-content li>a {
+    color: #00acc1 !important;
+}
+
+header, main, footer {
+    padding-left: 300px;
+}
+
+@media only screen and (max-width: 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+    *{
+        font-size: 14px;
+    }
+    h4{
+        font-size: 5vw;
+    }
+    i.small{
+        font-size: 1rem; !important;
+    }
+    div.retorno{
+        top: 10% !important;
+        bottom: auto !important;
+        height: auto !important;
+    }
+    .modal{
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .flow-text{
+        font-size: 4vw;
+    }
+}
