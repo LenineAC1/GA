@@ -44,10 +44,6 @@ p{
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     opacity: .8;
 }
-
-.trAgenFeed{
-    cursor: pointer;
-}
 /* label focus color */
 .input-field input[type=text]:focus + label, .materialize-textarea:focus:not([readonly]) + label {
     color: #00acc1 !important;
@@ -100,7 +96,7 @@ header, main, footer {
     .modal{
         top: 0 !important;
         bottom: 0 !important;
-        width: 100% !important;
+        width:97% !important;
         height: 100% !important;
     }
     .flow-text{

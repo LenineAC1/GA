@@ -18,9 +18,6 @@ if (isset($_GET['id_lab'])) {
     $_SESSION['id_lab'] = $_GET['id_lab'];
 }
 
-if(isset($_GET['idAgenFeed'])){
-    $_SESSION['idAgenFeed'] = $_GET['idAgenFeed'];
-}
 
 $disponivel = array(
     1 => '', 2 => '', 3 => '', 4 => '', 5 => '', 6 => '', 7 => '', 8 => '', 9 => ''
@@ -406,8 +403,8 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 $timestamp_dt_expira	= strtotime(date("Y-m-d"));
                 if ($timestamp_dt < $timestamp_dt_expira){
                 }else {
-                    if($arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'em analise' && !getFeedbackByID($arrayAgendamentos['ID'])) {
-                        echo "<tr data-url=?idAgenFeed=" . $arrayAgendamentos['ID'] . " class='trAgenFeed hoverable'>";
+                    if($arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'em analise' && $arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'negado' && !getFeedbackByID($arrayAgendamentos['ID'])) {
+                        echo "<tr data-url=?idAgenFeed=" . $arrayAgendamentos['ID'] . " class='trAgenFeed'>";
                     }else{
                         echo "<tr>";
                     }
@@ -423,10 +420,10 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     } else {
                         echo "<td><i class='small material-icons yellow-text text-darken-1'>cached</i></td>";
                     }
-                    if($arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'em analise' && !getFeedbackByID($arrayAgendamentos['ID'])) {
-                        echo '<td><i class="small material-icons cyan-text text-darken-1">feedback</i></a></td>';
+                    if($arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'em analise' && $arrayAgendamentos['ESTADO_AGENDAMENTO'] != 'negado'  && !getFeedbackByID($arrayAgendamentos['ID'])) {
+                        echo '<td><i class="small material-icons cyan-text text-darken-1"><a class="waves-effect waves-light abrir-feed" id='.$arrayAgendamentos['ID'].'>feedback</a></i></td>';
                     }else{
-                        echo '<td><i class="small material-icons grey-text text-lighten-2">feedback</i></a></td>';
+                        echo '<td><i class="small material-icons grey-text text-lighten-2">feedback</i></td>';
                     }
                     echo "</tr>";
                 }
@@ -538,13 +535,17 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         $('#modalExitoPedido').modal();
         $('#modalExitoFeedback').modal();
         $('#modalErroFeedback').modal();
-        $('#modalFeedback').modal({
-            //endingTop: '1%',
-            onOpenStart: function () {
-                window.history.pushState("", "", window.location.href.replace(/[?]idAgenFeed(.*$)/g, ''));
+        $('.abrir-feed').click(function () {
+            var teste = $.post('../../../libs/funcoes_php/setsessionFeedback.php', { name: 'value' });
 
-
-            }
+            $.ajax({
+                url: "../../../libs/funcoes_php/setsessionFeedback.php",
+                type: 'POST', //I want a type as POST
+                data: "name="+$(this).attr('id'),
+                success: function(data){
+                    window.location = window.location.href;
+                }
+            });
         });
 
         if (sessao_pedido == "erro") {
@@ -569,12 +570,6 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             $('#modalFeedback').modal('open');
         }
 
-        $('.trAgenFeed').click(function(){
-
-            window.location = $(this).data('url');
-
-
-        });
 
     });
 

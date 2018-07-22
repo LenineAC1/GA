@@ -240,7 +240,7 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
                             if ($Feedback) {
                                 echo "<td><a class='waves-effect waves-light modal-trigger' id='" . $arrayAgendamentos2['ID'] . "' name='" . $arrayAgendamentos2['ID'] . "' href='#modalVerFeedback" . $arrayAgendamentos2['ID'] . "'><i class='small material-icons cyan-text text-darken-1'>feedback</i></a></td>";
                                 echo " <!-- Modal Ver feedback Structure -->
-                                   <div id='modalVerFeedback".$arrayAgendamentos2['ID']."' class='modal modal-fixed-footer' style='min-width: 60%'>
+                                   <div id='modalVerFeedback".$arrayAgendamentos2['ID']."' class='modal modal-fixed-footer modalVerFeedback' style='min-width: 60%'>
                                         <div class='modal-content'>
                                             <h4 class='cyan-text text-darken-1'>Feedback de uso</h4>";
                                 if ($Feedback['CONDICAO']=='nulo'){
@@ -252,7 +252,7 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
                                               Feedback: <br>".$Feedback['TEXTO_FEEDBACK']."
                                           </div>
                                         <div class='modal-footer'>
-                                            <a href='#!'></a>
+                                            <a href='#!'class='fechar-modalFeed waves-effect waves-green btn-flat' id='".$arrayAgendamentos2['ID']."'>Fechar</a>
                                         </div>
                                     </div>";
                             }else{
@@ -354,6 +354,11 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
 
            $('#modalErroUpdate').modal();
            $('#modalExitoUpdate').modal();
+
+           $('.fechar-modalFeed').click(function (event) {
+               var idCerto = '#modalVerFeedback'+event.target.id;
+               $(idCerto).modal('close');
+           });
 
            if (sessao_update == "erro") {
                $('#modalErroUpdate').modal('open');
