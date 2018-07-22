@@ -536,8 +536,6 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         $('#modalExitoFeedback').modal();
         $('#modalErroFeedback').modal();
         $('.abrir-feed').click(function () {
-            var teste = $.post('../../../libs/funcoes_php/setsessionFeedback.php', { name: 'value' });
-
             $.ajax({
                 url: "../../../libs/funcoes_php/setsessionFeedback.php",
                 type: 'POST', //I want a type as POST
