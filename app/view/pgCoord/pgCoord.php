@@ -90,10 +90,10 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=1">LAB 1</a></li>
-                        <li><a href="?id_lab=2">LAB 2</a></li>
-                        <li><a href="?id_lab=3">LAB 3</a></li>
-                        <li><a href="?id_lab=4">LAB 4</a></li>
+                        <li><a href="" id="LabEdit1" class="mudarOpc">LAB 1</a></li>
+                        <li><a href="" id="LabEdit2" class="mudarOpc">LAB 2</a></li>
+                        <li><a href="" id="LabEdit3" class="mudarOpc">LAB 3</a></li>
+                        <li><a href="" id="LabEdit4" class="mudarOpc">LAB 4</a></li>
                     </ul>
                 </div>
             </li>
@@ -103,8 +103,8 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=5">LAB 1</a></li>
-                        <li><a href="?id_lab=6">LAB 2</a></li>
+                        <li><a href="" id="LabEdit5" class="mudarOpc">LAB 1</a></li>
+                        <li><a href="" id="LabEdit6" class="mudarOpc">LAB 2</a></li>
                     </ul>
                 </div>
             </li>
@@ -114,8 +114,8 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=7">LAB 1</a></li>
-                        <li><a href="?id_lab=8">LAB 2</a></li>
+                        <li><a href="" id="LabEdit7" class="mudarOpc">LAB 1</a></li>
+                        <li><a href="" id="LabEdit8" class="mudarOpc">LAB 2</a></li>
                     </ul>
                 </div>
             </li>
@@ -125,7 +125,7 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=9">LAB 1</a></li>
+                        <li><a href="" id="LabEdit9" class="mudarOpc">LAB 1</a></li>
                     </ul>
                 </div>
             </li>
@@ -248,6 +248,14 @@ if(!isset($_SESSION['opcCoord'])){
                                   if ($Feedback['CONDICAO']=='nulo'){
                                       echo "<p>Condição de uso: sem informação.</p>";
                                   }else{
+                                      switch ($Feedback['CONDICAO']){
+                                          case 1: $Feedback['CONDICAO'] = "Ótimo, sem problemas durante o uso.";
+                                          break;
+                                          case 2: $Feedback['CONDICAO'] = "Mediano, alguns componentes estavam comprometidos.";
+                                          break;
+                                          case 3: $Feedback['CONDICAO'] ="Ruim, o uso foi afetado negativamente.";
+                                          break;
+                                      }
                                       echo "<p>Condição de uso: ".$Feedback['CONDICAO']." </p>";
                                   };
                                   echo "
@@ -276,14 +284,14 @@ if(!isset($_SESSION['opcCoord'])){
           </div>
           ";
           }
-          else{
+          else if(isset($_SESSION['opcCoordLab']))
+          {
+            $lab = getLabByID($_SESSION['opcCoord']);
+            var_dump($lab);
+          }else{
             echo "Escolhe uma fita ae(não sei oq colocar aqui :))";
           }
           ?>
-          <!-- Modal agendamentos pendentes Structure -->
-
-
-          <!-- Modal agendamentos historico Structure -->
 
           </div>
       </div>

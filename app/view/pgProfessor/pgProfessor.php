@@ -540,8 +540,8 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 url: "../../../libs/funcoes_php/setsessionFeedback.php",
                 type: 'POST', //I want a type as POST
                 data: "name="+$(this).attr('id'),
-                success: function(data){
-                    window.location = window.location.href;
+                success: function(){
+                    window.location.replace(window.location.href);
                 }
             });
         });

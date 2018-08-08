@@ -136,4 +136,16 @@ function getUserByID($idUser){
     }
 }
 
+function getLabByID($idLab){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+    $query_select_Lab = $conexao_pdo->prepare("SELECT * FROM `o_a` WHERE ID = :idLab"); //prepara a query de seleção onde as informações são correspondentes
+    $query_select_Lab ->bindParam(':idLab', $idLab);
+    if ($query_select_Lab->execute()){
+        $queryResultLab = $query_select_Lab->fetch(PDO::FETCH_ASSOC);
+        return $queryResultLab;
+    }else{
+        return null;
+    }
+}
+
 ?>
