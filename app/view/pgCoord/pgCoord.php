@@ -19,6 +19,7 @@ foreach ($arrayAgendamentos_Pendentes as $arrayAgendamentos_Pendentes){
 if ($arrayAgendamentos_Pendentes['ESTADO_AGENDAMENTO'] == 'em analise') {
     $dataAgendamento = substr($arrayAgendamentos_Pendentes['DATA'], 4, 4) . "-" . substr($arrayAgendamentos_Pendentes['DATA'], 2, 2) . "-" . substr($arrayAgendamentos_Pendentes['DATA'], 0, 2);
     $timestamp_dt = strtotime($dataAgendamento); // converte para timestamp Unix
+    $timestamp_dt_expira = strtotime(date("Y-m-d"));
     if ($timestamp_dt < $timestamp_dt_expira) {
     }else {
         $countPendentes++;
