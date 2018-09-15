@@ -9,7 +9,7 @@
 $raiz = 'http://'.$_SERVER['HTTP_HOST']."/GA";
 session_start();
 if(isset($_SESSION['session_login'])){
-    unset($_SESSION['session_login']);
+    session_unset();
     header("location: $raiz");
 }else{
     header("location: $raiz");

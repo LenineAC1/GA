@@ -5749,7 +5749,6 @@ button.btn-floating {
   right: 0;
   background-color: #fafafa;
   padding: 0;
-  max-height: 70%;
   width: 55%;
   margin: auto;
   overflow-y: auto;
@@ -5822,7 +5821,7 @@ button.btn-floating {
 }
 
 .modal.bottom-sheet {
-  top: auto;
+  top: auto !important;
   bottom: -100%;
   margin: 0;
   width: 100%;

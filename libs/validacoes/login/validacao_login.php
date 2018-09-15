@@ -13,18 +13,18 @@ if (isset($_POST)) { //Verifica se o post foi enviado(evitar erros)
 
         $inputs_loginSC = remover_caracteres($inputs_login); // Função que remove caracteres especias evitando SQL injection
 
-        $login_email = $inputs_loginSC['login_email']; // passa o POST do login para uma variavel
+        $login_email = strtolower($inputs_loginSC['login_email']); // passa o POST do login para uma variavel
 
         $login_senha = $inputs_loginSC['login_senha']; // passa o POST da senha para uma variavel
 
-        $query = $conexao_pdo->prepare("select EMAIL, SENHA, TIPO from user where EMAIL = '$login_email' and SENHA = '$login_senha'"); //prepara a query de seleção onde as informações são correspondentes
+        $query = $conexao_pdo->prepare("select * from user where EMAIL = '$login_email' and SENHA = '$login_senha'"); //prepara a query de seleção onde as informações são correspondentes
 
         $query->execute(); // executa a query
 
         $queryResult = $query->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
 
         if (count($queryResult) > 1) {// checa se foram encontrados resultados
-
+            $_SESSION['session_login_id'] = $queryResult['ID'];
             $_SESSION['session_login'] = $login_email; // salva login realizado em uma sessão para uso posterior
             $_SESSION['session_tipo'] = $queryResult['TIPO']; // salva tipo da conta realizado em uma sessão para uso posterior
 
