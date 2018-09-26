@@ -30,6 +30,11 @@ if ($arrayAgendamentos_Pendentes['ESTADO_AGENDAMENTO'] == 'em analise') {
 
 $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
 $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
+
+if(!isset($_SESSION['opcCoord'])){
+    $_SESSION['opcCoord']="default";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +51,9 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
 
-    <body>
+
+    <body class="bodyCoord" style="background-color: #f4f4f4">
+
 
     <nav class="hide-on-large-only red darken-3">
       <div class="nav-wrapper">
@@ -66,14 +73,14 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
       <li class="center">AGENDAMENTOS</li>
         <?php
         if($countPendentes>0){
-            echo '<li><a href="#ModalAgenPen" class="modal-trigger"><span class="new badge cyan darken-1 pulse" data-badge-caption="nova(s)">'.$countPendentes.'</span>PENDENTES</a></li>';
+            echo '<li><a href="" id="AgenPend" class="mudarOpc"><span class="new badge cyan darken-1 pulse" data-badge-caption="nova(s)">'.$countPendentes.'</span>PENDENTES</a></li>';
         }else{
-            echo '<li><a href="#ModalAgenPen" class="modal-trigger"><span class="new badge cyan darken-1" data-badge-caption="nova(s)">'.$countPendentes.'</span>PENDENTES</a></li>';
+            echo '<li><a href="" id="AgenPend" class="mudarOpc"><span class="new badge cyan darken-1" data-badge-caption="nova(s)">'.$countPendentes.'</span>PENDENTES</a></li>';
 
         }
         ?>
 
-      <li><a href="#ModalHistAgen" class="modal-trigger">HISTÓRICO<i class="material-icons right" style="font-size: 32px; color: rgba(14,14,14,0.92);">history</i></a></li>
+      <li><a href="" id="AgenHist" class="mudarOpc">HISTÓRICO<i class="material-icons right" style="font-size: 32px; color: rgba(14,14,14,0.92);">history</i></a></li>
 
         <div class="divider"></div>
 
@@ -133,179 +140,217 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
                         class="material-icons">close</i>SAIR</a></li>
     </ul>
 
-    <div class="row center">
-      <div class="col s12">
+    <div class="row fundo-row">
+      <div class="col s12 fundo-row2" style="padding: 1% 2%">
+          <div class="col s12 white z-depth-1 center fundo-row3" style="padding: 0 2%">
+          <?php
+          if ($_SESSION['opcCoord']=='AgenPend'){
+              echo "
+              <div id='ModalAgenPen' style='height: 80%; font-size: 85%'>
+              <div class='modal-content'>
+                  <h4 class='cyan-text text-darken-1 h4Coord' style='margin: 4% auto 4% auto'>Agendamentos pendentes</h4>
+                  <table class='centered responsive-table bordered'>
+                      <thead>
+                      <tr>
+                          <th>Data</th>
+                          <th>Professor</th>
+                          <th>Horario</th>
+                          <th>Laboratorio</th>
+                          <th>Ano</th>
+                          <th>Curso</th>
+                          <th>Estado</th>
+                          <th> </th>
+                      </tr>
+                      </thead>
 
-      </div>
-    </div>
+                      <tbody>
+                        ";
 
-        <!-- Modal agendamentos pendentes Structure -->
-        <div id="ModalAgenPen" class="modal" style="width:95% !important; height: 80%">
-            <div class="modal-content">
-                <h4 class="cyan-text text-darken-1" style="margin: 3% auto 3% auto">Agendamentos pendentes</h4>
-                <table class="centered responsive-table">
-                    <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Professor</th>
-                        <th>Horario</th>
-                        <th>Laboratorio</th>
-                        <th>Ano</th>
-                        <th>Curso</th>
-                        <th>Estado</th>
-                        <th> </th>
-                    </tr>
-                    </thead>
+                      foreach ($arrayAgendamentos as $arrayAgendamentos) {
+                          // checa se o agendamento ja passou da data atual
+                          if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == 'em analise') {
+                              $Prof = getUserByID($arrayAgendamentos['FK_Conta_ID']);
+                              $dataAgendamento = substr($arrayAgendamentos['DATA'], 4, 4) . "-" . substr($arrayAgendamentos['DATA'], 2, 2) . "-" . substr($arrayAgendamentos['DATA'], 0, 2);
+                              $timestamp_dt = strtotime($dataAgendamento); // converte para timestamp Unix
+                              $timestamp_dt_expira = strtotime(date("Y-m-d"));
+                              if ($timestamp_dt < $timestamp_dt_expira) {
+                              } else {
+                                  echo "<tr>";
 
-                    <tbody>
+                                  echo "<td>" . substr($arrayAgendamentos['DATA'], 0, 2) . "/" . substr($arrayAgendamentos['DATA'], 2, 2) . "/" . substr($arrayAgendamentos['DATA'], 4, 4) . "</td>";
+                                  echo "<td>".$Prof['NOME']."</td>";
+                                  echo "<td>" . getHorarioByID($arrayAgendamentos['HORARIO']) . "</td>";
+                                  echo "<td>" . getNomeLabByID($arrayAgendamentos['FK_O_A_ID']) . "</td>";
+                                  echo "<td>" . $arrayAgendamentos['ANO_CURSO'] . "</td>";
+                                  echo "<td>" . $arrayAgendamentos['CURSO'] . "</td>";
+                                  echo "<td><i class='small material-icons yellow-text text-darken-1'>cached</i></td>";
+                                  $AgendamentoID = $arrayAgendamentos['ID'];
+                                  echo "<td><a class='waves-effect waves-light btn cyan darken-1' href='$raiz/libs/validacoes/agendamento/permissaoCoord.php?permissao=sim&agendamentoID=$AgendamentoID'>Permitir</a> <a class='waves-effect waves-light btn red darken-1' href='$raiz/libs/validacoes/agendamento/permissaoCoord.php?permissao=nao&agendamentoID=$AgendamentoID'>Negar</a></td>";
+                                  echo "</tr>";
+                                  $empty="no";
+                              }
+                          }
+                      }
 
-                    <?php
-                    foreach ($arrayAgendamentos as $arrayAgendamentos) {
-                        // checa se o agendamento ja passou da data atual
-                        if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == 'em analise') {
-                            $Prof = getUserByID($arrayAgendamentos['FK_Conta_ID']);
-                            $dataAgendamento = substr($arrayAgendamentos['DATA'], 4, 4) . "-" . substr($arrayAgendamentos['DATA'], 2, 2) . "-" . substr($arrayAgendamentos['DATA'], 0, 2);
-                            $timestamp_dt = strtotime($dataAgendamento); // converte para timestamp Unix
-                            $timestamp_dt_expira = strtotime(date("Y-m-d"));
-                            if ($timestamp_dt < $timestamp_dt_expira) {
-                            } else {
-                                echo "<tr>";
+                      echo "
 
-                                echo "<td>" . substr($arrayAgendamentos['DATA'], 0, 2) . "/" . substr($arrayAgendamentos['DATA'], 2, 2) . "/" . substr($arrayAgendamentos['DATA'], 4, 4) . "</td>";
-                                echo "<td>".$Prof['NOME']."</td>";
-                                echo "<td>" . getHorarioByID($arrayAgendamentos['HORARIO']) . "</td>";
-                                echo "<td>" . getNomeLabByID($arrayAgendamentos['FK_O_A_ID']) . "</td>";
-                                echo "<td>" . $arrayAgendamentos['ANO_CURSO'] . "</td>";
-                                echo "<td>" . $arrayAgendamentos['CURSO'] . "</td>";
-                                echo "<td><i class='small material-icons yellow-text text-darken-1'>cached</i></td>";
-                                $AgendamentoID = $arrayAgendamentos['ID'];
-                                echo "<td><a class='waves-effect waves-light btn cyan darken-1' href='$raiz/libs/validacoes/agendamento/permissaoCoord.php?permissao=sim&agendamentoID=$AgendamentoID'>Permitir</a> <a class='waves-effect waves-light btn red darken-1' href='$raiz/libs/validacoes/agendamento/permissaoCoord.php?permissao=nao&agendamentoID=$AgendamentoID'>Negar</a></td>";
-                                echo "</tr>";
-                                $empty="no";
-                            }
-                        }
-                    }
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+          ";
+          }
+          else if($_SESSION['opcCoord']=='AgenHist'){
+              echo "
+              <div id='ModalHistAgen' style='min-height: 84% !important; font-size: 85%''>
+              <div class='modal-content'>
+                  <h4 class='cyan-text text-darken-1 h4Coord' style='margin: 4% auto 4% auto'>Historico de agendamentos</h4>
+                  <table class='centered responsive-table'>
+                      <thead>
+                      <tr>
+                          <th>Data</th>
+                          <th>Professor</th>
+                          <th>Horario</th>
+                          <th>Laboratorio</th>
+                          <th>Ano</th>
+                          <th>Curso</th>
+                          <th>Estado</th>
+                          <th>Feedback</th>
+                      </tr>
+                      </thead>
 
-                    ?>
+                      <tbody>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
-            </div>
-        </div>
+                      ";
+                      foreach ($arrayAgendamentos2 as $arrayAgendamentos2) {
+                          // checa se o agendamento ja passou da data atual
+                          if ($arrayAgendamentos2['ESTADO_AGENDAMENTO'] != "em analise") {
+                              $Prof = getUserByID($arrayAgendamentos2['FK_Conta_ID']);
+                              echo "<tr>";
 
-        <!-- Modal agendamentos historico Structure -->
-        <div id="ModalHistAgen" class="modal modal-fixed-footer" style="width:95% !important; min-height: 84% !important;">
-            <div class="modal-content">
-                <h4 class="cyan-text text-darken-1" style="margin: 3% auto 3% auto">Historico de agendamentos</h4>
-                <table class="centered responsive-table">
-                    <thead>
-                    <tr>
-                        <th>Data</th>
-                        <th>Professor</th>
-                        <th>Horario</th>
-                        <th>Laboratorio</th>
-                        <th>Ano</th>
-                        <th>Curso</th>
-                        <th>Estado</th>
-                        <th>Feedback</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-
-                    <?php
-                    foreach ($arrayAgendamentos2 as $arrayAgendamentos2) {
-                        // checa se o agendamento ja passou da data atual
-                        if ($arrayAgendamentos2['ESTADO_AGENDAMENTO'] != "em analise") {
-                            $Prof = getUserByID($arrayAgendamentos2['FK_Conta_ID']);
-                            echo "<tr>";
-
-                            echo "<td>" . substr($arrayAgendamentos2['DATA'], 0, 2) . "/" . substr($arrayAgendamentos2['DATA'], 2, 2) . "/" . substr($arrayAgendamentos2['DATA'], 4, 4) . "</td>";
-                            echo "<td>".$Prof['NOME']."</td>";
-                            echo "<td>" . getHorarioByID($arrayAgendamentos2['HORARIO']) . "</td>";
-                            echo "<td>" . getNomeLabByID($arrayAgendamentos2['FK_O_A_ID']) . "</td>";
-                            echo "<td>" . $arrayAgendamentos2['ANO_CURSO'] . "</td>";
-                            echo "<td>" . $arrayAgendamentos2['CURSO'] . "</td>";
-                            if ($arrayAgendamentos2['ESTADO_AGENDAMENTO'] == "confirmado") {
-                                echo "<td><i class='small material-icons green-text text-darken-2'>check</i></td>";
-                            } else if ($arrayAgendamentos2['ESTADO_AGENDAMENTO'] == "negado") {
-                                echo "<td><i class='small material-icons red-text text-darken-2'>clear</i></td>";
-                            } else {
-                                echo "<td><i class='small material-icons yellow-text text-darken-1'>cached</i></td>";
-                            }
-                            $Feedback = getFeedbackByID($arrayAgendamentos2['ID']);
-                            if ($Feedback) {
-                                echo "<td><a class='waves-effect waves-light modal-trigger' id='" . $arrayAgendamentos2['ID'] . "' name='" . $arrayAgendamentos2['ID'] . "' href='#modalVerFeedback" . $arrayAgendamentos2['ID'] . "'><i class='small material-icons cyan-text text-darken-1'>feedback</i></a></td>";
-                                echo " <!-- Modal Ver feedback Structure -->
-                                   <div id='modalVerFeedback".$arrayAgendamentos2['ID']."' class='modal modal-fixed-footer modalVerFeedback' style='min-width: 60%'>
+                              echo "<td>" . substr($arrayAgendamentos2['DATA'], 0, 2) . "/" . substr($arrayAgendamentos2['DATA'], 2, 2) . "/" . substr($arrayAgendamentos2['DATA'], 4, 4) . "</td>";
+                              echo "<td>".$Prof['NOME']."</td>";
+                              echo "<td>" . getHorarioByID($arrayAgendamentos2['HORARIO']) . "</td>";
+                              echo "<td>" . getNomeLabByID($arrayAgendamentos2['FK_O_A_ID']) . "</td>";
+                              echo "<td>" . $arrayAgendamentos2['ANO_CURSO'] . "</td>";
+                              echo "<td>" . $arrayAgendamentos2['CURSO'] . "</td>";
+                              if ($arrayAgendamentos2['ESTADO_AGENDAMENTO'] == "confirmado") {
+                                  echo "<td><i class='small material-icons green-text text-darken-2'>check</i></td>";
+                              } else if ($arrayAgendamentos2['ESTADO_AGENDAMENTO'] == "negado") {
+                                  echo "<td><i class='small material-icons red-text text-darken-2'>clear</i></td>";
+                              } else {
+                                  echo "<td><i class='small material-icons yellow-text text-darken-1'>cached</i></td>";
+                              }
+                              $Feedback = getFeedbackByID($arrayAgendamentos2['ID']);
+                              if ($Feedback) {
+                                  echo "<td><a class='waves-effect waves-light modal-trigger' id='" . $arrayAgendamentos2['ID'] . "' name='" . $arrayAgendamentos2['ID'] . "' href='#modalVerFeedback" . $arrayAgendamentos2['ID'] . "'><i class='small material-icons cyan-text text-darken-1'>feedback</i></a></td>";
+                                  echo " <!-- Modal Ver feedback Structure -->
+                                   <div id='modalVerFeedback".$arrayAgendamentos2['ID']."' class='modal modal-fixed-footer modalVerFeedback' style='min-width: 60%;text-align: left'>
                                         <div class='modal-content'>
                                             <h4 class='cyan-text text-darken-1'>Feedback de uso</h4>";
-                                if ($Feedback['CONDICAO']=='nulo'){
-                                    echo "<p>Condição de uso: sem informação.</p>";
-                                }else{
-                                    echo "<p>Condição de uso: ".$Feedback['CONDICAO']." </p>";
-                                };
-                                echo "
+                                  if ($Feedback['CONDICAO']=='nulo'){
+                                      echo "<p>Condição de uso: sem informação.</p>";
+                                  }else{
+                                      echo "<p>Condição de uso: ".$Feedback['CONDICAO']." </p>";
+                                  };
+                                  echo "
                                               Feedback: <br>".$Feedback['TEXTO_FEEDBACK']."
                                           </div>
                                         <div class='modal-footer'>
                                             <a href='#!'class='fechar-modalFeed waves-effect waves-green btn-flat' id='".$arrayAgendamentos2['ID']."'>Fechar</a>
                                         </div>
                                     </div>";
-                            }else{
-                                echo "<td><i class='small material-icons grey-text text-lighten-2'>feedback</i></a></td>";
+                              }else{
+                                  echo "<td><i class='small material-icons grey-text text-lighten-2'>feedback</i></a></td>";
 
-                            }
-                            echo "</tr>";
+                              }
+                              echo "</tr>";
 
 
-                        }
+                          }
 
-                    }
-                    ?>
+                      };
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
-            </div>
-        </div>
+                    echo"
+                      </tbody>
+                  </table>
+              </div>
+              
+          </div>
+          ";
+          }
+          else{
+            echo "Escolhe uma fita ae(não sei oq colocar aqui :))";
+          }
+          ?>
+          <!-- Modal agendamentos pendentes Structure -->
 
-        <!-- Modal Notificações Structure -->
-        <div id="modalNotf" class="modal bottom-sheet">
-          <div class="modal-content container">
+
+          <!-- Modal agendamentos historico Structure -->
+
+          </div>
+      </div>
+    </div>
+
+    </main>
+
+
+
+    <!-- Modal Notificações Structure -->
+    <div id="modalNotf" class="modal bottom-sheet">
+        <div class="modal-content container">
             <h4>Notificações</h4>
             <ul class="collection">
-              <li id="#notf_content" class="row valign-wrapper"><!--Inicio notificação-->
-                <div class="col s6">
-                  <!--Estrutura da Notificação-->
-                  <p>
-                    Nome: <span>nome do professor</span><!--Nome do professor que solicitou-->
-                    <br>
-                    Data solicitada: <span>data</span><!--data solicitada-->
-                    <br>
-                    Solicitação de Agendamento: <span>Laboratório 1</span><!--Nome do lab solicitado-->
-                  </p>
-                </div>
-                <div class="col s6 center">
-                  <i class="tiny material-icons green-text">done</i>
-                  <a href="#!aprovado" class="green-text">APROVAR</a><!--Aceitar solicitação-->
-                  <br>
-                  <i class="tiny material-icons red-text">delete_outline</i>
-                  <a href="#!recusado" class="red-text">RECUSAR</a><!--Recusar solicitação-->
-                </div>
-              </li><!--Fim notificação-->
+                <li id="#notf_content" class="row valign-wrapper"><!--Inicio notificação-->
+                    <div class="col s6">
+                        <!--Estrutura da Notificação-->
+                        <p>
+                            Nome: <span>nome do professor</span><!--Nome do professor que solicitou-->
+                            <br>
+                            Data solicitada: <span>data</span><!--data solicitada-->
+                            <br>
+                            Solicitação de Agendamento: <span>Laboratório 1</span><!--Nome do lab solicitado-->
+                        </p>
+                    </div>
+                    <div class="col s6 center">
+                        <i class="tiny material-icons green-text">done</i>
+                        <a href="#!aprovado" class="green-text">APROVAR</a><!--Aceitar solicitação-->
+                        <br>
+                        <i class="tiny material-icons red-text">delete_outline</i>
+                        <a href="#!recusado" class="red-text">RECUSAR</a><!--Recusar solicitação-->
+                    </div>
+                </li><!--Fim notificação-->
             </ul>
-          </div>
-          <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">FINALIZAR</a>
-          </div>
         </div>
-    </main>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">FINALIZAR</a>
+        </div>
+    </div>
+
+    <!-- Modal erro Solicitação Update Structure -->
+    <div id="modalErroUpdate" class="modal retorno">
+        <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Erro - Não foi possível atualizar o pedido</h4>
+            <p>Não conseguimos atualizar seu pedido tente novamente mais tarde.
+                Desculpe o incomodo.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+    </div>
+
+    <!-- Modal exito Solicitação Update Structure -->
+    <div id="modalExitoUpdate" class="modal retorno">
+        <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Exito - Seu pedido foi atualizado com sucesso</h4>
+            <p>O pedido foi atualizado e uma notificação sera enviada ao professor.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+    </div>
 
     <!-- Modal erro Solicitação Structure -->
     <div id="modalErroUpdate" class="modal retorno">
@@ -350,6 +395,15 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
         $('.modal').modal();
         $('select').formSelect();
 
+
+            $('.mudarOpc').click(function () {
+                    $.ajax({
+                        url: "../../../libs/funcoes_php/setsessionOpcCoord.php",
+                        type: 'POST', //I want a type as POST
+                        data: "name="+$(this).attr('id')
+                    });
+            });
+
            var sessao_update = '<?=$_SESSION['retorno_update'] ?? '"nope"';?>';
 
            $('#modalErroUpdate').modal();
@@ -367,6 +421,10 @@ $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os
                $('#modalExitoUpdate').modal('open');
                sessao_update = null;
            }
+
+
+
+
       });
       </script>
     </body>

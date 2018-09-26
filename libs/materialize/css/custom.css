@@ -44,6 +44,11 @@ p{
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     opacity: .8;
 }
+
+
+
+
+
 /* label focus color */
 .input-field input[type=text]:focus + label, .materialize-textarea:focus:not([readonly]) + label {
     color: #00acc1 !important;
@@ -85,6 +90,13 @@ header, main, footer {
     h4{
         font-size: 5vw;
     }
+
+    .fundo-row, .fundo-row2, .fundo-row3{
+        padding: 0 !important;
+        height: 100% !important;
+        box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0), 0 3px 1px -2px rgba(0, 0, 0, 0), 0 1px 5px 0 rgba(0, 0, 0, 0);
+    }
+
     i.small{
         font-size: 1rem; !important;
     }
@@ -102,4 +114,12 @@ header, main, footer {
     .flow-text{
         font-size: 4vw;
     }
+
+    .bodyCoord{
+        background-color: white !important;
+    }
+    .h4Coord{
+        margin: 7% auto 7% auto !important;
+    }
+
 }

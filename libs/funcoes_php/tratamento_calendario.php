@@ -38,29 +38,34 @@ function setas($lado)
         $view_mes_atual = $_GET['mes'];
         $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
         if ($view_mes_atual > 1 && $lado == "esq") {
-            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
+
+            echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "#cal><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
         }
         if ($view_mes_atual < 12 && $lado == "dir") {
-            echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
+            echo "<a href=?atual=" . ($view_mes_atual + 1) . "#cal style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
         }
     } else
         if (isset($_GET['atual'])) {
             $view_mes_atual = $_GET['atual'];
             $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
             if ($view_mes_atual > 1 && $lado == "esq") {
-                echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
+
+                echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "#cal><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
             }
             if ($view_mes_atual < 12 && $lado == "dir") {
-                echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
+                echo "<a href=?atual=" . ($view_mes_atual + 1) . "#cal style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
+
             }
         } else if (!isset($_GET['atual'])) {
             $view_mes_atual = date('m');
             $_SESSION['last_mes'] = date('m');
             if ($view_mes_atual > 1 && $lado == "esq") {
-                echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
+
+                echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "#cal><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
             }
             if ($view_mes_atual < 12 && $lado == "dir") {
-                echo "<a href=?atual=" . ($view_mes_atual + 1) . " style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
+                echo "<a href=?atual=" . ($view_mes_atual + 1) . "#cal style=\"float: right\"><i class=\"medium material-icons cyan-text text-darken-1\">chevron_right</i></a>";
+
             }
         }
 }
@@ -154,7 +159,7 @@ function MostreCalendario($mes, $lab)
 
     $diasemana = jddayofweek(cal_to_jd(CAL_GREGORIAN, $mes, "01", date('Y')), 0);    // função que descobre o dia da semana
 
-    echo "<div class='row center container'><table id = 'tabela_mes' class='centered striped'>"; // TABELA PRINCIPAL ( TAG DE INICIO )
+    echo "<table id = 'tabela_mes' class='centered striped'>"; // TABELA PRINCIPAL ( TAG DE INICIO )
     echo "<tr id='tr_nome_mes'>";
     echo "</tr>";
     echo "<tr class='tr_dias_semana'>";
@@ -225,7 +230,7 @@ function MostreCalendario($mes, $lab)
         echo "</tr>";
     }
 
-    echo "</table></div>";
+    echo "</table>";
 }
 
 ?>

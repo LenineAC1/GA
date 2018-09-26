@@ -57,6 +57,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
     <link type="text/css" rel="stylesheet" href="<?= $raiz ?>/libs/materialize/css/custom.css"
           media="screen,projection"/>
 
+
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -82,62 +83,12 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         </li>
         <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
 
-        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1 pulse"
+
+        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1"
                                                              data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
 
         <li><a href="#modalMeusAgendamentos" class="modal-trigger" id="abrirAgendamentos">MEUS AGENDAMENTOS</a></li>
 
-        <div class="divider"></div>
-
-        <li class="center">LABORATÓRIOS</li>
-
-        <ul class="collapsible">
-            <li>
-                <div class="collapsible-header valign-wrapper"><i class="material-icons">computer</i>LABORATÓRIOS DE
-                    INFORMÁTICA
-                </div>
-                <div class="collapsible-body">
-                    <ul>
-                        <li><a href="?id_lab=1">LAB 1</a></li>
-                        <li><a href="?id_lab=2">LAB 2</a></li>
-                        <li><a href="?id_lab=3">LAB 3</a></li>
-                        <li><a href="?id_lab=4">LAB 4</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <div class="collapsible-header valign-wrapper"><i class="tiny material-icons">bubble_chart</i>LABORATÓRIOS
-                    DE QUÍMICA
-                </div>
-                <div class="collapsible-body">
-                    <ul>
-                        <li><a href="?id_lab=5">LAB 1</a></li>
-                        <li><a href="?id_lab=6">LAB 2</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <div class="collapsible-header valign-wrapper"><i class="material-icons">restaurant</i>LABORATÓRIOS DE
-                    NUTRIÇÃO E DIETÉTICA
-                </div>
-                <div class="collapsible-body">
-                    <ul>
-                        <li><a href="?id_lab=7">LAB 1</a></li>
-                        <li><a href="?id_lab=8">LAB 2</a></li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <div class="collapsible-header valign-wrapper "><i class="material-icons">local_florist</i>LABORATÓRIOS
-                    DE MEIO AMBIENTE
-                </div>
-                <div class="collapsible-body">
-                    <ul>
-                        <li><a href="?id_lab=9">LAB 1</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
 
         <!--BOTÃO DE SAIR-->
         <div class="divider"></div>
@@ -145,10 +96,20 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                         class="material-icons">close</i>SAIR</a></li>
     </ul>
 
-
     <!--calendario-->
+
+    <div class="row center container">
+        <!--Labs card-->
+            <h5>Escolha um laboratório!</h5>
+            <?php require '../profLabs.html'; ?>
+        <!--FIM Labs card-->
+    </div>
+
+    <div class="divider"></div>
+
     <div class="container">
-        <div class="row center valign-wrapper">
+        <div id="cal" class="row center valign-wrapper">
+
             <div class="col s2">
                 <?php if (isset($_SESSION['id_lab'])) {
                     setas("esq");
@@ -160,10 +121,12 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     echo "<p class='flow-text' > Selecione uma data <br>";
                     echo GetNomeMes($view_mes_atual) . " - " . date("Y");
                 }
+
+                echo "</p>";
                 ?>
-                </p>
                 <?php if (!isset($_SESSION['id_lab'])) {
-                    echo "Escolha um laboratorio!";
+                    echo "<h5>Escolha um laboratório!</h5>";
+
                 } else {
                     echo getNomeLabByID($_SESSION['id_lab']);
                 } ?>
@@ -176,20 +139,27 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         </div>
     </div>
 
-    <?php
-    if (isset($_SESSION['id_lab'])) {
-        MostreCalendario($view_mes_atual, $_SESSION['id_lab']);
-    }
+
+    <div class='row center container'>
+
+        <?php
+        if (isset($_SESSION['id_lab'])) {
+            MostreCalendario($view_mes_atual, $_SESSION['id_lab']);
+        }
     ?>
+    </div>
+
 
 </main>
 
 <!-- Modal Notificações Structure -->
 <div id="modalNotf" class="modal bottom-sheet">
 
+
     <div class="modal-content">
         <h4>Notificações</h4>
         <ul class="collection">
+
 
             <!--Estrutura da Notificação-->
             <li class="collection-item avatar">
@@ -379,7 +349,9 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
 <div id="modalMeusAgendamentos" class="modal" style="width:100% !important; height: 70%;">
     <div class="modal-content">
         <h4 class="cyan-text text-darken-1" style="margin: 3% auto 3% auto">Meus agendamentos</h4>
-        <table class="centered responsive-table">
+
+        <table class="centered responsive-table bordered">
+
             <thead>
             <tr>
                 <th>Data</th>
@@ -536,7 +508,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         $('#modalExitoFeedback').modal();
         $('#modalErroFeedback').modal();
         $('.abrir-feed').click(function () {
-            var teste = $.post('../../../libs/funcoes_php/setsessionFeedback.php', { name: 'value' });
+
 
             $.ajax({
                 url: "../../../libs/funcoes_php/setsessionFeedback.php",
