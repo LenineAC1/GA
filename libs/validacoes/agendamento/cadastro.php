@@ -17,7 +17,7 @@ if (isset($_POST['curso_manha'])&&isset($_POST['ano_manha'])&&isset($_POST['hora
     $post_manha = array(
         "curso" => $_POST['curso_manha'],
         "ano" => $_POST['ano_manha'],
-        "horario" => $_POST['horario_manha'],
+        "horario" => implode(",",$_POST['horario_manha']),
         "data" => dataCompletaPTBR($_POST['dia_agendamento'],$_POST['mes_agendamento'],null),
         "id_conta" => $_POST['id_conta_agendamento'],
         "id_lab" => $_POST['lab_agendamento'],
@@ -27,13 +27,12 @@ if (isset($_POST['curso_noite'])&&isset($_POST['ano_noite'])&&isset($_POST['hora
     $post_noite = array(
         "curso" => $_POST['curso_noite'],
         "ano" => $_POST['ano_noite'],
-        "horario" => $_POST['horario_noite'],
+        "horario" => implode(",",$_POST['horario_noite']),
         "data" => dataCompletaPTBR($_POST['dia_agendamento'],$_POST['mes_agendamento'],null),
         "id_conta" => $_POST['id_conta_agendamento'],
         "id_lab" => $_POST['lab_agendamento'],
     );
 }
-
 
 if(isset($_SESSION['PERMISSAOPEDIDO'])&&$_SESSION['PERMISSAOPEDIDO']=='permitido'){
 if (isset($post_manha)){

@@ -24,6 +24,8 @@ $disponivel = array(
 ); // aulas disponives
 
 if (isset($_SESSION['id_lab']) && isset($_GET['mes']) && isset($_GET['dia'])) {
+
+
     $dataCompleta = dataCompletaPTBR($_GET['dia'], $_GET['mes'], null);
     $query_select_disponivel = $conexao_pdo->prepare("SELECT HORARIO FROM `agendamento` WHERE `DATA` = :dataAgendamento AND `FK_O_A_ID` = :idLab"); //prepara a query de seleção onde as informações são correspondentes
     $query_select_disponivel->bindParam(':dataAgendamento', $dataCompleta);
@@ -32,22 +34,45 @@ if (isset($_SESSION['id_lab']) && isset($_GET['mes']) && isset($_GET['dia'])) {
     if ($query_select_disponivel->execute()) {
         $queryResult = $query_select_disponivel->fetchAll(PDO::FETCH_COLUMN, 0); // passa resultado da query para um array
         if (count($queryResult) >= 1) {
+            $queryResult = implode(",",$queryResult);
+            $queryResult = explode(",",$queryResult);
+            $queryResult = array_unique($queryResult);
             foreach ($queryResult as $array => $key) {
+
                 $disponivel[$key] = "disabled";
             }
         }
+
     }
 }//define oque sera disabilitado na escolha de pedido
 
 $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
 
 
+//$arrayAgendamentos_Notifi2 = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
+
+
 ?>
 
 <!DOCTYPE html>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 
+<script type="text/javascript" src="<?= $raiz ?>/libs/materialize/js/materialize.js"></script>
+<script>
+    $.ajax({
+        type: "GET",
+        url: "../../../libs/funcoes_php/autoUpdateNotf.php",
+        data: "name=a",
+        dataType: 'json',
+        success: function (data) {
+            $(".result").html(data[0]);
+            $(".notf").html(data[1]);
+        }
+    });
+</script>
 <html>
 <head>
+
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -84,8 +109,12 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
 
 
-        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1"
-                                                             data-badge-caption="nova(s)">1</span>NOTIFICAÇÕES</a></li>
+
+        <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1 notf"
+                                                             data-badge-caption="nova(s)"></span>NOTIFICAÇÕES</a></li>
+
+
+
 
         <li><a href="#modalMeusAgendamentos" class="modal-trigger" id="abrirAgendamentos">MEUS AGENDAMENTOS</a></li>
 
@@ -128,7 +157,12 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     echo "<h5>Escolha um laboratório!</h5>";
 
                 } else {
-                    echo getNomeLabByID($_SESSION['id_lab']);
+                    echo "<ul class='collapsible popout' data-collapsible='accordion'>
+                    <li>
+                    ";
+                    echo "<div class='collapsible-header center' style='display: block; font-size: 1.1vw'>".getNomeLabByID($_SESSION['id_lab'])."</div>";
+                    echo "<div class='collapsible-body' style='text-align: justify'>Condição de uso geral: *FAZER AINDA* <br>".getDescricaoByID($_SESSION['id_lab'])."</div>";
+                    echo "</li></ul>";
                 } ?>
             </div>
             <div class="col s2">
@@ -159,17 +193,9 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
     <div class="modal-content">
         <h4>Notificações</h4>
         <ul class="collection">
+            <div class="result">
 
-
-            <!--Estrutura da Notificação-->
-            <li class="collection-item avatar">
-                <span class="title">SOLICITAÇÃO ACEITA</span> <!--Estado da solicitação-->
-                <p>Sua solicitação do: <span>nome lab</span>, <!--Nome do lab solicitado-->
-                    para o dia: <span>data</span>, <!--data solicitada-->
-                    foi <span>aceita</span>. <!--Estado da solicitação-->
-                </p>
-            </li>
-
+            </div>
         </ul>
     </div>
     <div class="modal-footer">
@@ -218,8 +244,8 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                                 <label>Selecione o Ano</label>
                             </div>
                             <div class="input-field col s12 m6">
-                                <select name="horario_manha" form="form_pedido" id="selec1_3">
-                                    <option value="" selected>---</option>
+                                <select multiple name="horario_manha[]" form="form_pedido" id="selec1_3">
+                                    <option value="" disabled selected>---</option>
                                     <option value="1" <?= $disponivel[1] ?? ''; ?>>1º Aula</option>
                                     <option value="2" <?= $disponivel[2] ?? ''; ?>>2º Aula</option>
                                     <option value="3" <?= $disponivel[3] ?? ''; ?>>3º Aula</option>
@@ -450,6 +476,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
 
 <footer>
     <?php
+
     if (isset($_GET['dia']) && isset($_GET['mes'])) {
         $dataEscolhidaCompleta = dataCompletaPTBR($_GET['dia'], $_GET['mes'], "/");
         foreach ($_SESSION['datasProibidas'] as $key => $value) {
@@ -460,13 +487,14 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 $_SESSION['PERMISSAOPEDIDO'] = "permitido";
             }
         }
+    }else{
+        $_SESSION['PERMISSAOPEDIDO'] = "negado";
     }
+
     ?>
 </footer>
 <!--JavaScript at end of body for optimized loading-->
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 
-<script type="text/javascript" src="<?= $raiz ?>/libs/materialize/js/materialize.js"></script>
 
 <script type="text/javascript">
 
@@ -488,6 +516,9 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         var sessao_lab = <?=$_SESSION['id_lab'] ?? '"nope"';?>;
         var permissao_dia = "<?=$_SESSION['PERMISSAOPEDIDO'] ?? 'negado';?>";
         var sessao_feed = "<?=$_SESSION['idAgenFeed'] ?? 'nope';?>";
+        var ids = 0;
+        var updateperm = "no";
+
 
         $('#modalSolicitacao').modal({
             //endingTop: '1%',
@@ -495,6 +526,10 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 window.history.pushState("", "", window.location.href.replace(/&pedido/g, ''));
             }
         });
+
+
+
+
 
         if (window.location.href.indexOf("pedido") > -1 && sessao_lab !== "nope" && permissao_dia == "permitido") {
             $('#modalSolicitacao').modal('open');
@@ -509,16 +544,38 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         $('#modalErroFeedback').modal();
         $('.abrir-feed').click(function () {
 
-
             $.ajax({
                 url: "../../../libs/funcoes_php/setsessionFeedback.php",
                 type: 'POST', //I want a type as POST
                 data: "name="+$(this).attr('id'),
                 success: function(data){
-                    window.location = window.location.href;
+                    location.reload();
                 }
             });
         });
+
+                setInterval(function () {
+                    ids = $(".agendNotf").map(function () {
+                        return this.id;
+                    }).get();
+                    $.ajax({
+                        type: "GET",
+                        url: "../../../libs/funcoes_php/autoUpdateNotf.php",
+                        data: "name=a",
+                        dataType: 'json',
+                        success: function (data) {
+                            $(".result").html(data[0]);
+                            $(".notf").html(data[1]);
+                            if (data[2]=="pulse"){
+                                $(".notf").addClass('pulse');
+                            }else{
+                                $(".notf").removeClass("pulse");
+                            }
+                        }
+                    });
+                }, 500);
+
+
 
         if (sessao_pedido == "erro") {
             $('#modalErroPedido').modal('open');
@@ -541,6 +598,19 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         if (sessao_feed != "nope"){
             $('#modalFeedback').modal('open');
         }
+        $('#modalNotf').modal({
+            //endingTop: '1%',
+            onCloseEnd: function () {
+                $.ajax({
+                    url: "../../../libs/funcoes_php/UpdateNotficacaoProf.php",
+                    type: 'POST', //I want a type as POST
+                    data: "idsLab="+ids,
+                    success: function(data){
+
+                    }
+                });
+            }
+        });
 
 
     });
@@ -549,7 +619,8 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
 
     //--------------Valida se posso ou nao enviar pedido-------------//
     $('#selec1_1,#selec1_2,#selec1_3').change(function () {
-        if ($("#selec1_1 option:selected").text() !== "---" || $("#selec1_2 option:selected").text() !== "---" || $("#selec1_3 option:selected").text() !== "---") {
+
+        if ($("#selec1_1 option:selected").text() !== "---" || $("#selec1_2 option:selected").text() !== "---" || $("#selec1_3 option:selected").length > 0) {
 
             $("#selec2_1,#selec2_2,#selec2_3").prop("disabled", true);
             $('select').formSelect();
@@ -559,11 +630,16 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             $('select').formSelect();
         }
         if ($("#selec1_1 option:selected").text() == "Segurança do trabalho") {
+            $('#selec1_2 option[value="1º ano"]').prop("selected", false);
             $('#selec1_2 option[value="1º ano"]').prop("disabled", true);
+
+            $('select').formSelect();
+        }else{
+            $('#selec1_2 option[value="1º ano"]').prop("disabled", false);
             $('select').formSelect();
         }
 
-        if ($("#selec1_1 option:selected").text() !== "---" && $("#selec1_2 option:selected").text() !== "---" && $("#selec1_3 option:selected").text() !== "---") {
+        if ($("#selec1_1 option:selected").text() !== "---" && $("#selec1_2 option:selected").text() !== "---" &&  $("#selec1_3 option:selected").length > 0) {
 
             $('#submit_pedido').removeClass("disabled");
             $('select').formSelect();
@@ -605,6 +681,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             $('#submit_feedback').addClass("disabled");
         }
     });
+
     // ---------------------------------------------------------------//
 </script>
 <?php

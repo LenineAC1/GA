@@ -32,9 +32,12 @@ if (isset($_POST)) {
             if($query_insert->execute()){
                 header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
                 $_SESSION['retorno_feedback']='exito';
+
             }else{
                 header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
                 $_SESSION['retorno_feedback']='erro';
+                $_SESSION['dados']=$conexao_pdo->errorInfo();
+
             }
         }
     }else{

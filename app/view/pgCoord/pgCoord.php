@@ -31,6 +31,7 @@ if ($arrayAgendamentos_Pendentes['ESTADO_AGENDAMENTO'] == 'em analise') {
 $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
 $arrayAgendamentos2 = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
 
+
 if(!isset($_SESSION['opcCoord'])){
     $_SESSION['opcCoord']="default";
 }
@@ -84,7 +85,7 @@ if(!isset($_SESSION['opcCoord'])){
 
         <div class="divider"></div>
 
-        <li class="center">LABORATÓRIOS</li>
+        <li class="center">EDITAR LABORATÓRIOS</li>
 
         <ul class="collapsible">
             <li>
@@ -144,6 +145,9 @@ if(!isset($_SESSION['opcCoord'])){
       <div class="col s12 fundo-row2" style="padding: 1% 2%">
           <div class="col s12 white z-depth-1 center fundo-row3" style="padding: 0 2%">
           <?php
+          if(!isset($_SESSION['opcCoord']) || $_SESSION['opcCoord']=='default'){
+              $_SESSION['opcCoord']='AgenPend';
+          }
           if ($_SESSION['opcCoord']=='AgenPend'){
               echo "
               <div id='ModalAgenPen' style='height: 80%; font-size: 85%'>
@@ -196,6 +200,13 @@ if(!isset($_SESSION['opcCoord'])){
 
                       </tbody>
                   </table>
+                  
+                ";
+              if (!isset($empty)){
+                  echo "<div style='padding:4%;font-size:1.5vw'>Sem agendamentos pendentes, por favor volte mais tarde</div>";
+              }
+              echo "
+          
               </div>
           </div>
           ";
@@ -245,8 +256,9 @@ if(!isset($_SESSION['opcCoord'])){
                               if ($Feedback) {
                                   echo "<td><a class='waves-effect waves-light modal-trigger' id='" . $arrayAgendamentos2['ID'] . "' name='" . $arrayAgendamentos2['ID'] . "' href='#modalVerFeedback" . $arrayAgendamentos2['ID'] . "'><i class='small material-icons cyan-text text-darken-1'>feedback</i></a></td>";
                                   echo " <!-- Modal Ver feedback Structure -->
-                                   <div id='modalVerFeedback".$arrayAgendamentos2['ID']."' class='modal modal-fixed-footer modalVerFeedback' style='min-width: 60%;text-align: left'>
+                                   <div id='modalVerFeedback".$arrayAgendamentos2['ID']. "' class='modal modal-fixed-footer modalVerFeedback' style='min-width: 10%;text-align: left'>
                                         <div class='modal-content'>
+                                         
                                             <h4 class='cyan-text text-darken-1'>Feedback de uso</h4>";
                                   if ($Feedback['CONDICAO']=='nulo'){
                                       echo "<p>Condição de uso: sem informação.</p>";
@@ -255,6 +267,7 @@ if(!isset($_SESSION['opcCoord'])){
                                   };
                                   echo "
                                               Feedback: <br>".$Feedback['TEXTO_FEEDBACK']."
+                                          </div>
                                           </div>
                                         <div class='modal-footer'>
                                             <a href='#!'class='fechar-modalFeed waves-effect waves-green btn-flat' id='".$arrayAgendamentos2['ID']."'>Fechar</a>
@@ -279,8 +292,8 @@ if(!isset($_SESSION['opcCoord'])){
           </div>
           ";
           }
-          else{
-            echo "Escolhe uma fita ae(não sei oq colocar aqui :))";
+          else {
+
           }
           ?>
           <!-- Modal agendamentos pendentes Structure -->

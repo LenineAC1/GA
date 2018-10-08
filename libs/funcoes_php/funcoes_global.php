@@ -80,12 +80,24 @@ function getAgendamendos($idConta){
 //Fim: Pegar agendamentos da conta
 
 function getHorarioByID($idHorario){
+    $IDhorarioArray = explode(",",$idHorario);
+
     $HorarioArray = array(
         1 => "1º Aula", 2 => "2º Aula", 3 => "3º Aula",
         4 => "4º Aula", 5 => "5º Aula", 6 => "6º Aula",
         7 => "7º Aula", 8 => "8º Aula", 9 => "9º Aula",
     );
-    return $HorarioArray[$idHorario];
+    foreach ($IDhorarioArray as $key=>$value){
+        foreach ($HorarioArray as $key2=>$value2){
+            if ($value == $key2){
+                $IDhorarioArray[$key] = $value2."<br>";
+            }
+        }
+
+        $horario = implode(" ", $IDhorarioArray);
+    }
+
+    return $horario;
 };
 
 function getAgendamentoByID($idAgendamento){
@@ -136,4 +148,51 @@ function getUserByID($idUser){
     }
 }
 
+function getLABbyID($idLab){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+    $query_select_Lab = $conexao_pdo->prepare("SELECT *  FROM `o_a` WHERE ID = :idLab"); //prepara a query de seleção onde as informações são correspondentes
+    $query_select_Lab->bindParam(':idLab', $idLab);
+    if ($query_select_Lab->execute()){
+        $queryResultLab = $query_select_Lab->fetch(PDO::FETCH_ASSOC);
+            return $queryResultLab;
+
+    }else{
+        return null;
+    }
+}
+
+function RemoveNotifi($idAgen){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+    $query_uptade_agendamento = $conexao_pdo->prepare("UPDATE `agendamento` SET Notfi = '0' WHERE `agendamento`.`ID` = :idAgendamento;");
+    $query_uptade_agendamento->bindParam(':idAgendamento', $idAgen);
+    $query_uptade_agendamento->execute();
+
+}
+
+function getNomeLabByID($id_lab)
+{
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+    $query_lab_id = $conexao_pdo->prepare("SELECT `NOME` FROM `o_a` WHERE `ID` = $id_lab "); //prepara a query de seleção onde as informações são correspondentes
+    $query_lab_id->execute();
+    $queryResult_lab_id = $query_lab_id->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($queryResult_lab_id) >= 1) {// checa se foram encontrados resultados
+
+        return $queryResult_lab_id['NOME'];
+    }
+};
+
+function getDescricaoByID($id_lab){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+    $query_lab_id = $conexao_pdo->prepare("SELECT `DESCRICAO` FROM `o_a` WHERE `ID` = $id_lab "); //prepara a query de seleção onde as informações são correspondentes
+    $query_lab_id->execute();
+    $queryResult_lab_id = $query_lab_id->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($queryResult_lab_id) >= 1) {// checa se foram encontrados resultados
+
+        return $queryResult_lab_id['DESCRICAO'];
+    }
+};
 ?>

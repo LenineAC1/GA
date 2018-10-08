@@ -14,25 +14,18 @@
 
 $raiz = 'http://' . $_SERVER['HTTP_HOST'] . "/GA";
 
-require_once 'funcoes_global.php';
+require_once '../libs/funcoes_php/funcoes_global.php';
 
 if (session_id() == '') {
     session_start();
 }
 
-if (isset($_GET['mes'])) {
-    if (is_numeric($_GET['mes']) && $_GET['mes'] >0 && $_GET['mes']<13){
-        $view_mes_atual = sprintf("%02d",$_GET['mes']);
-    }else{
-        $view_mes_atual = date('m');
-    }
-} else if (isset($_GET['atual'])) {
-    if (is_numeric($_GET['atual']) && $_GET['atual'] >0 && $_GET['atual']<13){
-        $view_mes_atual = sprintf("%02d",$_GET['atual']);
-    }else{
-        $view_mes_atual = date('m');
-    }
 
+if (isset($_GET['mes'])) {
+    $view_mes_atual = $_GET['mes'];
+} else if (isset($_GET['atual'])) {
+    $view_mes_atual = $_GET['atual'];
+    $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
 } else if (!isset($_GET['atual'])) {
     $view_mes_atual = date('m');
     $_SESSION['last_mes'] = date('m');
@@ -42,11 +35,8 @@ if (isset($_GET['mes'])) {
 function setas($lado)
 {
     if (isset($_GET['mes'])) {
-        if (is_numeric($_GET['mes']) && $_GET['mes'] >0 && $_GET['mes']<13){
-            $view_mes_atual = sprintf("%02d",$_GET['mes']);
-        }else{
-            $view_mes_atual = date('m');
-        }
+        $view_mes_atual = $_GET['mes'];
+        $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
         if ($view_mes_atual > 1 && $lado == "esq") {
 
             echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "#cal><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
@@ -56,11 +46,8 @@ function setas($lado)
         }
     } else
         if (isset($_GET['atual'])) {
-            if (is_numeric($_GET['atual']) && $_GET['atual'] >0 && $_GET['atual']<13){
-                $view_mes_atual = sprintf("%02d",$_GET['atual']);
-            }else{
-                $view_mes_atual = date('m');
-            }
+            $view_mes_atual = $_GET['atual'];
+            $view_mes_atual = $view_mes_atual < 10 ? '0' . $view_mes_atual : $view_mes_atual;
             if ($view_mes_atual > 1 && $lado == "esq") {
 
                 echo "<p><a href=?atual=" . ($view_mes_atual - 1) . "#cal><i class=\"medium material-icons cyan-text text-darken-1\">chevron_left</i></a></p>";
@@ -84,7 +71,19 @@ function setas($lado)
 }
 
 
+function getNomeLabByID($id_lab)
+{
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
 
+    $query_lab_id = $conexao_pdo->prepare("SELECT `NOME` FROM `o_a` WHERE `ID` = $id_lab "); //prepara a query de seleção onde as informações são correspondentes
+    $query_lab_id->execute();
+    $queryResult_lab_id = $query_lab_id->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($queryResult_lab_id) >= 1) {// checa se foram encontrados resultados
+
+        return $queryResult_lab_id['NOME'];
+    }
+}
 
 function MostreSemanas()
 {
@@ -211,12 +210,7 @@ function MostreCalendario($mes, $lab)
             /* TRECHO IMPORTANTE: A PARTIR DESTE TRECHO É MOSTRADO UM DIA DO CALENDÁRIO (MUITA ATENÇÃO NA HORA DA MANUTENÇÃO) */
 
 
-
-            if($diacorrente > 30){
-                $datacorridaDT = date('Y')."-".$mes."-".($diacorrente);
-            }else{
-                $datacorridaDT = date('Y')."-".$mes."-".($diacorrente+1);
-            }
+            $datacorridaDT = date('Y')."-".$mes."-".($diacorrente+1);
             $datacorridaDT = New DateTime($datacorridaDT);
 
             $dataAtualDT = New DateTime(date('Y-m-d'));
