@@ -138,21 +138,34 @@ function MostreCalendario($mes, $lab)
     $_SESSION['datasProibidas'] = array();
     $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
 
-    $query_pedido = $conexao_pdo->prepare("select * from agendamento where ESTADO_AGENDAMENTO = 'em analise'"); //prepara a query de seleção onde as informações são correspondentes
+    $query_pedido = $conexao_pdo->prepare("select * from agendamento"); //prepara a query de seleção onde as informações são correspondentes
     $query_pedido->execute();
     $queryResult_pedido = $query_pedido->fetchAll(PDO::FETCH_ASSOC); // passa resultado da query para um array
 
+
     if (count($queryResult_pedido) > 1) {// checa se foram encontrados resultados
 
-        foreach ($queryResult_pedido as &$value) {
 
-            $dias_marcados[] = $value['DATA'];
-            $lab_marcados[] = $value['FK_O_A_ID'];
+            foreach ($queryResult_pedido as &$value) {
+                $dataAgendamento = substr($value['DATA'], 4, 4) . "-" . substr($value['DATA'], 2, 2) . "-" . substr($value['DATA'], 0, 2);
+                $timestamp_dt = strtotime($dataAgendamento); // converte para timestamp Unix
+                $timestamp_dt_expira = strtotime(date("Y-m-d"));
+                if ($timestamp_dt < $timestamp_dt_expira) {
+                }else {
+                $dias_marcados[] = $value['DATA'];
+                $lab_marcados[] = $value['FK_O_A_ID'];
+
+                $dias_marcados = array_unique($dias_marcados);
+            }
         }
+
     } else {
         $dias_marcados[] = 0;
         $lab_marcados[] = 0;
     }
+    $arrayHORARIOSFull=null;
+
+
 
     $numero_dias = GetNumeroDias($mes);    // retorna o número de dias que tem o mês desejado
     $nome_mes = GetNomeMes($mes);
@@ -183,23 +196,33 @@ function MostreCalendario($mes, $lab)
                 } else {
                     foreach ($dias_marcados as $chave => $valor) {
                         $str_dias_marcados = $dias_marcados[$chave];
-                        $query_limite = $conexao_pdo->prepare("SELECT DATA FROM agendamento GROUP BY DATA HAVING COUNT(*) = 9 "); //prepara a query de seleção onde as informações são correspondentes
+                        $query_limite = $conexao_pdo->prepare("SELECT * FROM agendamento WHERE DATA = $str_dias_marcados"); //prepara a query de seleção onde as informações são correspondentes
                         $query_limite->execute();
-                        $queryResult_limite = $query_limite->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
-                        if (substr($queryResult_limite['DATA'], 0, 2) == ($diacorrente + 1)) {
-                            foreach ($lab_marcados as $chave2 => $valor2) {
-                                $str_lab_marcados = $lab_marcados[$chave];
-                                if ($str_lab_marcados == $lab) {
-                                    if (substr($str_dias_marcados, 0, 2) == ($diacorrente + 1) && substr($str_dias_marcados, 2, 2) == $mes) {
-                                        echo " id = 'dia_comum' style ='border: 1.5px red solid;";
-                                    } else {
-                                        echo " id = 'dia_comum'";
+                        $queryResult_limite = $query_limite->fetchall(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+                       foreach ($queryResult_limite as $key => $value){
+                           if (substr($value['DATA'], 0, 2) == ($diacorrente + 1)){
+
+                               $arrayHORARIOSFull .= $value['HORARIO'];
+                                if (strlen(filter_var($arrayHORARIOSFull, FILTER_SANITIZE_NUMBER_INT)) == 9){
+                                    foreach ($lab_marcados as $chave2 => $valor2) {
+                                        $str_lab_marcados = $lab_marcados[$chave];
+                                        if ($str_lab_marcados == $lab) {
+                                            if (substr($str_dias_marcados, 0, 2) == ($diacorrente + 1) && substr($str_dias_marcados, 2, 2) == $mes) {
+                                                echo " id = 'dia_comum' style ='border: 1px red dashed;";
+                                            } else {
+                                                echo " id = 'dia_comum'";
+                                            }
+                                        } else {
+                                            echo " id = 'dia_comum'";
+                                        }
                                     }
-                                } else {
-                                    echo " id = 'dia_comum'";
                                 }
-                            }
-                        }
+
+                           }
+
+
+                       }
 
                     }
                 }

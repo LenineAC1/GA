@@ -11,6 +11,10 @@ if (session_id() == '') {
         header("location: $raiz");
     }
 
+if (isset($_GET['id_lab'])) {
+    $_SESSION['id_lab_coord'] = $_GET['id_lab'];
+}
+
 //----------------------------------------------Contar o numero de agendamentos pendentes-------------------------------------------------//
 $arrayAgendamentos_Pendentes = getAgendamendos($_SESSION['session_login_id']); // Pega os agendamentos da conta
 
@@ -94,10 +98,10 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=1">LAB 1</a></li>
-                        <li><a href="?id_lab=2">LAB 2</a></li>
-                        <li><a href="?id_lab=3">LAB 3</a></li>
-                        <li><a href="?id_lab=4">LAB 4</a></li>
+                        <li><a href="?id_lab=1" id="EditLab" class="mudarOpc">LAB 1</a></li>
+                        <li><a href="?id_lab=2" id="EditLab" class="mudarOpc">LAB 2</a></li>
+                        <li><a href="?id_lab=3" id="EditLab" class="mudarOpc">LAB 3</a></li>
+                        <li><a href="?id_lab=4" id="EditLab" class="mudarOpc">LAB 4</a></li>
                     </ul>
                 </div>
             </li>
@@ -107,8 +111,8 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=5">LAB 1</a></li>
-                        <li><a href="?id_lab=6">LAB 2</a></li>
+                        <li><a href="?id_lab=5" id="EditLab" class="mudarOpc">LAB 1</a></li>
+                        <li><a href="?id_lab=6" id="EditLab" class="mudarOpc">LAB 2</a></li>
                     </ul>
                 </div>
             </li>
@@ -118,8 +122,8 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=7">LAB 1</a></li>
-                        <li><a href="?id_lab=8">LAB 2</a></li>
+                        <li><a href="?id_lab=7" id="EditLab" class="mudarOpc">LAB 1</a></li>
+                        <li><a href="?id_lab=8" id="EditLab" class="mudarOpc">LAB 2</a></li>
                     </ul>
                 </div>
             </li>
@@ -129,7 +133,7 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
                 <div class="collapsible-body">
                     <ul>
-                        <li><a href="?id_lab=9">LAB 1</a></li>
+                        <li><a href="?id_lab=9" id="EditLab" class="mudarOpc">LAB 1</a></li>
                     </ul>
                 </div>
             </li>
@@ -143,7 +147,7 @@ if(!isset($_SESSION['opcCoord'])){
 
     <div class="row fundo-row">
       <div class="col s12 fundo-row2" style="padding: 1% 2%">
-          <div class="col s12 white z-depth-1 center fundo-row3" style="padding: 0 2%">
+          <div class="col s12 white z-depth-1 fundo-row3" style="padding: 0 2%">
           <?php
           if(!isset($_SESSION['opcCoord']) || $_SESSION['opcCoord']=='default'){
               $_SESSION['opcCoord']='AgenPend';
@@ -151,7 +155,7 @@ if(!isset($_SESSION['opcCoord'])){
           if ($_SESSION['opcCoord']=='AgenPend'){
               echo "
               <div id='ModalAgenPen' style='height: 80%; font-size: 85%'>
-              <div class='modal-content'>
+              <div class='modal-content center'>
                   <h4 class='cyan-text text-darken-1 h4Coord' style='margin: 4% auto 4% auto'>Agendamentos pendentes</h4>
                   <table class='centered responsive-table bordered'>
                       <thead>
@@ -214,7 +218,7 @@ if(!isset($_SESSION['opcCoord'])){
           else if($_SESSION['opcCoord']=='AgenHist'){
               echo "
               <div id='ModalHistAgen' style='min-height: 84% !important; font-size: 85%''>
-              <div class='modal-content'>
+              <div class='modal-content center'>
                   <h4 class='cyan-text text-darken-1 h4Coord' style='margin: 4% auto 4% auto'>Historico de agendamentos</h4>
                   <table class='centered responsive-table'>
                       <thead>
@@ -263,15 +267,13 @@ if(!isset($_SESSION['opcCoord'])){
                                   if ($Feedback['CONDICAO']=='nulo'){
                                       echo "<p>Condição de uso: sem informação.</p>";
                                   }else{
-                                      echo "<p>Condição de uso: ".$Feedback['CONDICAO']." </p>";
+                                      echo "<p>Condição de uso: ".getCondicaoFraseFeed($Feedback['CONDICAO'])." </p>";
                                   };
                                   echo "
                                               Feedback: <br>".$Feedback['TEXTO_FEEDBACK']."
                                           </div>
                                           </div>
-                                        <div class='modal-footer'>
-                                            <a href='#!'class='fechar-modalFeed waves-effect waves-green btn-flat' id='".$arrayAgendamentos2['ID']."'>Fechar</a>
-                                        </div>
+                                        
                                     </div>";
                               }else{
                                   echo "<td><i class='small material-icons grey-text text-lighten-2'>feedback</i></a></td>";
@@ -292,8 +294,25 @@ if(!isset($_SESSION['opcCoord'])){
           </div>
           ";
           }
-          else {
-
+          else if ($_SESSION['opcCoord']=="EditLab") {
+              $labInfos = getLABbyID($_SESSION['id_lab_coord']);
+              echo "
+              <div id='ModalEditLab' style='min-height: 84% !important; font-size: 85%;'>
+              <div class='modal-content '>
+                  <h4 class='cyan-text text-darken-1 h4Coord' style='margin: 4% auto 4% auto;text-align: center'>Editar laboratório</h4>
+                  <span style='font-size: 1.7vw;text-align: center'><p contenteditable='true' id='LabNome'>
+             ".$labInfos["NOME"]."
+              </p></span>
+              <div style='margin: 3% 5% 4% 5%;'>
+              <span style='text-align: justify;'><p contenteditable='true' id='LabText'>
+                 ".$labInfos["DESCRICAO"]."
+                 </p></span>
+                 <button id='salvarLab' class='waves-effect waves-light btn cyan darken-1 center' style='margin-top: 2%;width: 100%'>Salvar</button>
+                 </div>
+                 
+              </div>
+          </div>
+          ";
           }
           ?>
           <!-- Modal agendamentos pendentes Structure -->
@@ -389,6 +408,28 @@ if(!isset($_SESSION['opcCoord'])){
         </div>
     </div>
 
+    <div id="modalExitoUpdateLab" class="modal retorno">
+        <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Exito - Os dados foram atualizados com sucesso</h4>
+            <p>A alteração foi realizada com sucesso.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+    </div>
+
+    <div id="modalErroUpdateLab" class="modal retorno">
+        <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Erro - Os dados não foram atualizados com sucesso</h4>
+            <p>A alteração não foi realizada com sucesso, por favor tente mais tarde.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+    </div>
+
     
 
     <footer>
@@ -408,7 +449,6 @@ if(!isset($_SESSION['opcCoord'])){
         $('.modal').modal();
         $('select').formSelect();
 
-
             $('.mudarOpc').click(function () {
                     $.ajax({
                         url: "../../../libs/funcoes_php/setsessionOpcCoord.php",
@@ -417,10 +457,14 @@ if(!isset($_SESSION['opcCoord'])){
                     });
             });
 
+
+
            var sessao_update = '<?=$_SESSION['retorno_update'] ?? '"nope"';?>';
 
            $('#modalErroUpdate').modal();
            $('#modalExitoUpdate').modal();
+           $('#modalExitoUpdateLab').modal();
+           $('#modalErroUpdateLab').modal();
 
            $('.fechar-modalFeed').click(function (event) {
                var idCerto = '#modalVerFeedback'+event.target.id;
@@ -436,7 +480,26 @@ if(!isset($_SESSION['opcCoord'])){
            }
 
 
+           $('#salvarLab').click(function () {
+               var nome = document.getElementById("LabNome").innerText;
+               var text = document.getElementById("LabText").innerText;
+               var id = '<?=$_SESSION['id_lab_coord'] ?? '""';?>';
 
+               $.ajax({
+                   url: "../../../libs/funcoes_php/UpdateLabInfo.php",
+                   type: 'POST', //I want a type as POST
+                   data: {nome_lab: nome, texto_lab: text, id_lab: id},
+                   success: function (data) {
+                       if (data == "sucesso"){
+                           $('#modalExitoUpdateLab').modal('open')
+                       }else{
+                           $('#modalErroUpdateLab').modal('open')
+                       }
+                   }
+
+               });
+
+           });
 
       });
       </script>

@@ -161,7 +161,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     <li>
                     ";
                     echo "<div class='collapsible-header center' style='display: block; font-size: 1.1vw'>".getNomeLabByID($_SESSION['id_lab'])."</div>";
-                    echo "<div class='collapsible-body' style='text-align: justify'>Condição de uso geral: *FAZER AINDA* <br>".getDescricaoByID($_SESSION['id_lab'])."</div>";
+                    echo "<div class='collapsible-body' style='text-align: justify'>Condição de uso geral: ".getCondicaoFraseFeed(calcularMediaFeed($_SESSION['id_lab']))." <br><br>".getDescricaoByID($_SESSION['id_lab'])."</div>";
                     echo "</li></ul>";
                 } ?>
             </div>
@@ -372,7 +372,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
 
 
 <!-- Modal meus agendamentos Structure -->
-<div id="modalMeusAgendamentos" class="modal" style="width:100% !important; height: 70%;">
+<div id="modalMeusAgendamentos" class="modal" style="width:100% !important; height: 85%;">
     <div class="modal-content">
         <h4 class="cyan-text text-darken-1" style="margin: 3% auto 3% auto">Meus agendamentos</h4>
 
@@ -468,8 +468,12 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <button type="submit" class="modal-close waves-effect waves-green btn-flat disabled" id="submit_feedback">Enviar feedback
         </button>
     </div>
+        <?PHP
+        $ID_LAB = getAgendamentoByID($agendamentoFeedback['ID']);
+        ?>
         <input type="hidden" value="<?= $_SESSION['session_login_id'] ?? ''; ?>" name="id_conta_feedback">
         <input type="hidden" value="<?= $agendamentoFeedback['ID'] ?? ''; ?>" name="id_agendamento_feedback">
+        <input type="hidden" value="<?= $ID_LAB['FK_O_A_ID'] ?? ''; ?>" name="id_lab_feedback">
     </form>
     </div>
 

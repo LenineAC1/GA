@@ -24,11 +24,12 @@ if (isset($_POST)) {
             header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
             $_SESSION['retorno_feedback']='erro';
         }else{
-            $query_insert = $conexao_pdo->prepare("INSERT INTO `feedback_uso` (`ID`, `TEXTO_FEEDBACK`, `CONDICAO`, `FK_Conta_ID`, `FK_Agendamento_ID`) VALUES (NULL, :textFeed, :condicao, :idConta, :idAgend);"); //prepara a query de seleção onde as informações são correspondentes
+            $query_insert = $conexao_pdo->prepare("INSERT INTO `feedback_uso` (`ID`, `TEXTO_FEEDBACK`, `CONDICAO`, `FK_Conta_ID`, `FK_Agendamento_ID`,`FK_O_A_ID`) VALUES (NULL, :textFeed, :condicao, :idConta, :idAgend, :idLab);"); //prepara a query de seleção onde as informações são correspondentes
             $query_insert->bindParam(':textFeed', $POST_TRATADO['textarea_feedback']);
             $query_insert->bindParam(':condicao', $POST_TRATADO['select_feedback']);
             $query_insert->bindParam(':idConta', $POST_TRATADO['id_conta_feedback']);
             $query_insert->bindParam(':idAgend', $POST_TRATADO['id_agendamento_feedback']);
+            $query_insert->bindParam(':idLab', $POST_TRATADO['id_lab_feedback']);
             if($query_insert->execute()){
                 header("location: $raiz/app/view/pgProfessor/pgProfessor.php");
                 $_SESSION['retorno_feedback']='exito';

@@ -181,7 +181,7 @@ function getNomeLabByID($id_lab)
 
         return $queryResult_lab_id['NOME'];
     }
-};
+}
 
 function getDescricaoByID($id_lab){
     $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
@@ -194,5 +194,39 @@ function getDescricaoByID($id_lab){
 
         return $queryResult_lab_id['DESCRICAO'];
     }
-};
+}
+
+function calcularMediaFeed($id_lab){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+    $query_media = $conexao_pdo->prepare("SELECT CONDICAO FROM `feedback_uso` WHERE FK_O_A_ID = $id_lab"); //prepara a query de seleção onde as informações são correspondentes
+    $query_media->execute();
+    $query_mediaResult =  $query_media->fetchall(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($query_mediaResult) >= 1) {// checa se foram encontrados resultados
+
+        foreach ($query_mediaResult as $key => $value){
+
+            $query_mediaResult[$key] = $value['CONDICAO'];
+
+        }
+
+        $media_total = round(array_sum($query_mediaResult)/count($query_mediaResult));
+
+
+        return $media_total;
+    }else{
+        return 4;
+    }
+}
+
+function getCondicaoFraseFeed($condicao){
+    $condicaoArray = array(
+        1 => "Ótimo, sem problemas durante o uso.", 2 => "Mediano, alguns componentes estavam comprometidos.", 3 => "Ruim, o uso foi afetado negativamente.",4 => "Sem dados suficientes",
+    );
+
+
+    return $condicaoArray[$condicao];
+}
+
 ?>
