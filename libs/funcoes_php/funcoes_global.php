@@ -47,7 +47,7 @@ function getAgendamendos($idConta){
         if (count($queryResultTipo) >= 1) {
             $Tipo=$queryResultTipo['tipo'];
             if($Tipo == 'coordenador'){
-                $query_select_agendamentos = $conexao_pdo->prepare("SELECT * FROM agendamento ORDER BY SUBSTR( DATA, 5, 4) DESC, SUBSTR( DATA, 3, 2) DESC, SUBSTR( DATA, 1, 2) DESC, HORARIO ASC"); //prepara a query de seleção onde as informações são correspondentes
+                $query_select_agendamentos = $conexao_pdo->prepare("SELECT *  FROM `agendamento` ORDER BY DATA DESC, HORARIO ASC"); //prepara a query de seleção onde as informações são correspondentes
                 if ($query_select_agendamentos->execute()){
                     $queryResult = $query_select_agendamentos->fetchAll(PDO::FETCH_ASSOC); // passa resultado da query para um array
                     if (count($queryResult) >= 1) {
@@ -58,7 +58,7 @@ function getAgendamendos($idConta){
                     }
                 }
             }else{
-                $query_select_agendamentos = $conexao_pdo->prepare("SELECT *  FROM `agendamento` WHERE FK_Conta_ID = :idConta  ORDER BY SUBSTR( DATA, 5, 4), SUBSTR( DATA, 3, 2), SUBSTR( DATA, 1, 2), HORARIO ASC"); //prepara a query de seleção onde as informações são correspondentes
+                $query_select_agendamentos = $conexao_pdo->prepare("SELECT *  FROM `agendamento` WHERE FK_Conta_ID = :idConta  ORDER BY DATA ASC, HORARIO ASC"); //prepara a query de seleção onde as informações são correspondentes
                 $query_select_agendamentos->bindParam(':idConta', $idConta);
                 if ($query_select_agendamentos->execute()){
                     $queryResult = $query_select_agendamentos->fetchAll(PDO::FETCH_ASSOC); // passa resultado da query para um array
@@ -227,11 +227,6 @@ function getCondicaoFraseFeed($condicao){
 
 
     return $condicaoArray[$condicao];
-}
-
-
-function generateRandomString($length = 10) {
-    return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
 }
 
 ?>
