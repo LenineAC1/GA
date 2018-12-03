@@ -24,14 +24,34 @@ if (isset($_POST)) { //Verifica se o post foi enviado(evitar erros)
         $queryResult = $query->fetch(PDO::FETCH_ASSOC); // passa resultado da query para um array
 
         if (count($queryResult) > 1) {// checa se foram encontrados resultados
-            $_SESSION['session_login_id'] = $queryResult['ID'];
-            $_SESSION['session_login'] = $login_email; // salva login realizado em uma sessão para uso posterior
-            $_SESSION['session_tipo'] = $queryResult['TIPO']; // salva tipo da conta realizado em uma sessão para uso posterior
 
+            $_SESSION['session_login_id'] = $queryResult['ID'];
             if ($queryResult['TIPO'] == "coordenador") {// checa se tipo da conta é de coordenador
-                header("location: $raiz/app/view/pgCoord/pgCoord.php");// redireciona para pagina de coordenador
+                if ($queryResult['PERMISSAO'] == "coord_perm_first"){
+                    header("location: $raiz");
+                    $_SESSION['erro_login'] = 2;
+                }else{
+
+                    $_SESSION['session_login'] = $login_email; // salva login realizado em uma sessão para uso posterior
+                    $_SESSION['session_tipo'] = $queryResult['TIPO']; // salva tipo da conta realizado em uma sessão para uso posterior
+
+                    header("location: $raiz/app/view/pgCoord/pgCoord.php");// redireciona para pagina de coordenador
+                }
             } else if ($queryResult['TIPO'] == "professor") {// checa se tipo da conta é de professor
-                header("location: $raiz/app/view/pgProfessor/pgProfessor.php");// redireciona para pagina de coordenador
+                if ($queryResult['PERMISSAO'] == "prof_perm_first"){
+                    header("location: $raiz");
+                    $_SESSION['erro_login'] = 2;
+                }else{
+                    $_SESSION['session_login'] = $login_email; // salva login realizado em uma sessão para uso posterior
+                    $_SESSION['session_tipo'] = $queryResult['TIPO']; // salva tipo da conta realizado em uma sessão para uso posterior
+
+                    header("location: $raiz/app/view/pgProfessor/pgProfessor.php");// redireciona para pagina de coordenador
+                }
+            }else if($queryResult['TIPO'] == "admin"){
+                $_SESSION['session_login'] = $login_email; // salva login realizado em uma sessão para uso posterior
+                $_SESSION['session_tipo'] = $queryResult['TIPO']; // salva tipo da conta realizado em uma sessão para uso posterior
+
+                header("location: $raiz/app/view/pgAdmin/pgAdmin.php");// redireciona para pagina de coordenador
             }
 
         } else {// caso não encontre resultados da query retorna para index com uma sessão de erro
