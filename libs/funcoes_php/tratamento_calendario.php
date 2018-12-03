@@ -151,24 +151,20 @@ function MostreCalendario($mes, $lab)
                 $timestamp_dt = strtotime($dataAgendamento); // converte para timestamp Unix
                 $timestamp_dt_expira = strtotime(date("Y-m-d"));
                 if ($timestamp_dt < $timestamp_dt_expira) {
-                    $dias_marcados[] = 0;
-                    $lab_marcados[] = 0;
                 }else {
-
                 $dias_marcados[] = $value['DATA'];
                 $lab_marcados[] = $value['FK_O_A_ID'];
 
                 $dias_marcados = array_unique($dias_marcados);
-
             }
         }
 
     } else {
         $dias_marcados[] = 0;
         $lab_marcados[] = 0;
-
-        }
+    }
     $arrayHORARIOSFull=null;
+
 
 
     $numero_dias = GetNumeroDias($mes);    // retorna o número de dias que tem o mês desejado
@@ -233,7 +229,7 @@ function MostreCalendario($mes, $lab)
             } else {
                 echo "id = 'dia vazio' style = 'display: none'";
             }
-            echo "class='td_dia_mes red-text text-accent-4'>";
+            echo "class='td_dia_mes '>";
 
             /* TRECHO IMPORTANTE: A PARTIR DESTE TRECHO É MOSTRADO UM DIA DO CALENDÁRIO (MUITA ATENÇÃO NA HORA DA MANUTENÇÃO) */
 
@@ -259,7 +255,7 @@ function MostreCalendario($mes, $lab)
                     array_push($_SESSION['datasProibidas'], sprintf("%02d", $diacorrente) . "/" . $mes . "/" . date('Y'));
                 } else {
 
-                    echo "<a href = '" . $_SERVER["PHP_SELF"] . "?mes=$mes&dia=" . ($diacorrente + 1) . "&pedido' id='link_dia_" . ($diacorrente + 1) . "' class='C_link_dia cyan-text text-darken-1 abrir_modal'>" . ++$diacorrente . "</a>";
+                    echo "<a href = '" . $_SERVER["PHP_SELF"] . "?mes=$mes&dia=" . ($diacorrente + 1) . "&pedido' id='link_dia_" . ($diacorrente + 1) . "' class='C_link_dia red-text text-darken-3 abrir_modal'>" . ++$diacorrente . "</a>";
 
                 }
             } else {
