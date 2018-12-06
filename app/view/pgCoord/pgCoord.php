@@ -71,10 +71,15 @@ if(!isset($_SESSION['opcCoord'])){
         
     <main>
       
-    <ul id="slide-out" class="sidenav sidenav-fixed">
+    <ul id="slide-out" class="sidenav sidenav-fixed" style="overflow-y: auto">
       <li class="center red darken-3">
           <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
       </li>
+        <?php
+        $user = getUserByID($_SESSION['session_login_id']);
+        ?>
+        <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
+        <li class="center"> <?= $user['NOME']?></li>
       <li class="center">AGENDAMENTOS</li>
         <?php
         if($countPendentes>0){
@@ -89,7 +94,7 @@ if(!isset($_SESSION['opcCoord'])){
 
         <div class="divider"></div>
 
-        <li class="center">EDITAR LABORATÓRIOS</li>
+        <li class="center">EDITAR OBJETOS DE AGENDAMENTO</li>
 
         <ul class="collapsible">
             <li>
@@ -106,7 +111,7 @@ if(!isset($_SESSION['opcCoord'])){
                 </div>
             </li>
             <li>
-                <div class="collapsible-header valign-wrapper"><i class="tiny material-icons">bubble_chart</i>LABORATÓRIOS
+                <div class="collapsible-header valign-wrapper"><i class="material-icons">bubble_chart</i>LABORATÓRIOS
                     DE QUÍMICA
                 </div>
                 <div class="collapsible-body">
@@ -137,12 +142,34 @@ if(!isset($_SESSION['opcCoord'])){
                     </ul>
                 </div>
             </li>
+            <li>
+                <div class="collapsible-header valign-wrapper "><i class="material-icons">camera</i>PROJETORES
+                </div>
+                <div class="collapsible-body">
+                    <ul>
+                        <li><a href="?id_lab=10" id="EditLab" class="mudarOpc">PROJETOR 1</a></li>
+                        <li><a href="?id_lab=11" id="EditLab" class="mudarOpc">PROJETOR 2</a></li>
+                        <li><a href="?id_lab=12" id="EditLab" class="mudarOpc">PROJETOR 3</a></li>
+                        <li><a href="?id_lab=13" id="EditLab" class="mudarOpc">PROJETOR 4</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header valign-wrapper "><i class="material-icons">meeting_room</i>SALA NIVONEI
+                    </div>
+                <div class="collapsible-body">
+                    <ul>
+                        <li><a href="?id_lab=14" id="EditLab" class="mudarOpc">SALA NIVONEI</a></li>
+                    </ul>
+                </div>
+            </li>
         </ul>
 
         <!--BOTÃO DE SAIR-->
         <div class="divider"></div>
         <li><a href="<?= $raiz ?>/libs/validacoes/login/validacao_deslog.php"><i
                         class="material-icons">close</i>SAIR</a></li>
+        <li><a class="modal-trigger" href="#modalReport"><i class="material-icons">report_problem</i></a></li>
     </ul>
 
     <div class="row fundo-row">
@@ -430,7 +457,57 @@ if(!isset($_SESSION['opcCoord'])){
         </div>
     </div>
 
-    
+    <!-- Modal exito report Structure -->
+    <div id="modalExitoReport" class="modal retorno">
+        <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Exito - Seu report foi enviado com sucesso</h4>
+            <p>Seu report foi enviado para a administração, obrigado por sua ajuda.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+    </div>
+
+    <!-- Modal erro report Structure -->
+    <div id="modalErroReport" class="modal retorno">
+        <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Erro - Seu report não foi enviado</h4>
+            <p>Por favor tente mais tarde, desculpe o incomodo.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        </div>
+    </div>
+
+    <!-- Modal report Structure -->
+    <div id="modalReport" class="modal modal-fixed-footer retorno">
+        <div class="modal-content">
+            <h4 class="cyan-text text-darken-1">Reclamações e BUGS</h4>
+            <p>Que tipo de informação você deseja enviar:
+                <form id="reportform" method="post" action="<?= $raiz ?>/libs/funcoes_php/criacaoReport.php">
+                    <div class="input-field col s12">
+                        <select name="select_report" form="reportform" required>
+                            <option value="" selected>---</option>
+                            <option value="1">Suegestões</option>
+                            <option value="2" >BUGS</option>
+                        </select>
+                    </div>
+            <p>Descreva sua experiencia:</p>
+            <div class="input-field col s12">
+                <textarea id="textReport" name="textReport" class="materialize-textarea" minlength="5" required></textarea>
+            </div>
+
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+            <button type="submit" class="waves-effect waves-green btn-flat" id="submit_report">Enviar</button>
+
+        </div>
+        </form>
+    </div>
 
     <footer>
       
@@ -460,6 +537,7 @@ if(!isset($_SESSION['opcCoord'])){
 
 
            var sessao_update = '<?=$_SESSION['retorno_update'] ?? '"nope"';?>';
+           var sessao_retorno_report = "<?=$_SESSION['retorno_report'] ?? 'nope';?>";
 
            $('#modalErroUpdate').modal();
            $('#modalExitoUpdate').modal();
@@ -477,6 +555,15 @@ if(!isset($_SESSION['opcCoord'])){
            } else if (sessao_update == "exito") {
                $('#modalExitoUpdate').modal('open');
                sessao_update = null;
+           }
+
+           if (sessao_retorno_report == "erro") {
+               $('#modalErroReport').modal('open');
+               sessao_retorno_report = null;
+           }
+           else if (sessao_retorno_report== "exito") {
+               $('#modalExitoReport').modal('open');
+               sessao_retorno_report = null;
            }
 
 
@@ -506,5 +593,8 @@ if(!isset($_SESSION['opcCoord'])){
     </body>
     <?php if (isset($_SESSION['retorno_update'])) {
         unset($_SESSION['retorno_update']);
+        if(isset($_SESSION['retorno_report'])){
+            unset($_SESSION['retorno_report']);
+        }
     } ?>
   </html>

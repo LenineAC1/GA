@@ -234,4 +234,30 @@ function generateRandomString($length = 10) {
     return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
 }
 
+function getReport(){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+    $query_lab_id = $conexao_pdo->prepare("SELECT * FROM `report`"); //prepara a query de seleção onde as informações são correspondentes
+    $query_lab_id->execute();
+    $queryResult_lab_id = $query_lab_id->fetchAll(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($queryResult_lab_id) >= 1) {// checa se foram encontrados resultados
+
+        return $queryResult_lab_id;
+    }
+}
+
+function getUser(){
+    $conexao_pdo = conexao_pdo('lobmanager_db', 'root', ''); // realiza a conexão com o banco de dados
+
+    $query_lab_id = $conexao_pdo->prepare("SELECT * FROM `user`"); //prepara a query de seleção onde as informações são correspondentes
+    $query_lab_id->execute();
+    $queryResult_lab_id = $query_lab_id->fetchAll(PDO::FETCH_ASSOC); // passa resultado da query para um array
+
+    if (count($queryResult_lab_id) >= 1) {// checa se foram encontrados resultados
+
+        return $queryResult_lab_id;
+    }
+}
+
 ?>

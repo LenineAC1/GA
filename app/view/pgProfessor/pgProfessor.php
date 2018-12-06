@@ -106,9 +106,11 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <li class="center red darken-3">
             <a href="#"><img src="<?= $raiz ?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
         </li>
+        <?php
+         $user = getUserByID($_SESSION['session_login_id']);
+        ?>
         <!-- Modal Notificações Trigger // Alterar o número de novas notificações-->
-
-
+        <li class="center"> <?= $user['NOME']?></li>
 
         <li><a class="modal-trigger" href="#modalNotf"><span class="new badge cyan darken-1 notf"
                                                              data-badge-caption="nova(s)"></span>NOTIFICAÇÕES</a></li>
@@ -123,13 +125,14 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <div class="divider"></div>
         <li><a href="<?= $raiz ?>/libs/validacoes/login/validacao_deslog.php"><i
                         class="material-icons">close</i>SAIR</a></li>
+        <li style="position: absolute; bottom: 10%"><a class="modal-trigger" href="#modalReport"><i class="material-icons">report_problem</i></a></li>
     </ul>
 
     <!--calendario-->
 
     <div class="row center container">
         <!--Labs card-->
-            <h5>Escolha um laboratório!</h5>
+            <h5>Escolha oque deseja agendar!</h5>
             <?php require '../profLabs.html'; ?>
         <!--FIM Labs card-->
     </div>
@@ -154,7 +157,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 echo "</p>";
                 ?>
                 <?php if (!isset($_SESSION['id_lab'])) {
-                    echo "<h5>Escolha um laboratório!</h5>";
+                    echo "<h5>Escolha oque deseja agendar!</h5>";
 
                 } else {
                     echo "<ul class='collapsible popout' data-collapsible='accordion'>
@@ -209,7 +212,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         <div class="modal-content">
             <h4 class="cyan-text text-darken-1">Solicitar agendamento</h4>
             Nome: <span><?php if (!isset($_SESSION['id_lab'])) {
-                    echo "Escolha um laboratorio!";
+                    echo "Escolha oque deseja agendar!";
                 } else {
                     echo getNomeLabByID($_SESSION['id_lab']);
                 } ?></span><br><!--Nome do lab solicitado-->
@@ -370,6 +373,70 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
     </div>
 </div>
 
+<!-- Modal exito CANCEL Structure -->
+<div id="modalExitoCancel" class="modal retorno">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1">Exito - Seu agendamento foi cancelado</h4>
+        <p>Seu agendamendo foi cancelado com sucesso.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+    </div>
+</div>
+
+
+<!-- Modal exito report Structure -->
+<div id="modalExitoReport" class="modal retorno">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1">Exito - Seu report foi enviado com sucesso</h4>
+        <p>Seu report foi enviado para a administração, obrigado por sua ajuda.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+    </div>
+</div>
+
+<!-- Modal erro report Structure -->
+<div id="modalErroReport" class="modal retorno">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1">Erro - Seu report não foi enviado</h4>
+        <p>Por favor tente mais tarde, desculpe o incomodo.
+        </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+    </div>
+</div>
+
+<!-- Modal report Structure -->
+<div id="modalReport" class="modal modal-fixed-footer retorno">
+    <div class="modal-content">
+        <h4 class="cyan-text text-darken-1">Reclamações e BUGS</h4>
+        <p>Que tipo de informação você deseja enviar:
+            <form id="reportform" method="post" action="<?= $raiz ?>/libs/funcoes_php/criacaoReport.php">
+            <div class="input-field col s12">
+                <select name="select_report" form="reportform" required>
+                    <option value="" selected>---</option>
+                    <option value="1">Suegestões</option>
+                    <option value="2" >BUGS</option>
+                </select>
+            </div>
+            <p>Descreva sua experiencia:</p>
+            <div class="input-field col s12">
+                <textarea id="textReport" name="textReport" class="materialize-textarea" minlength="5" required></textarea>
+            </div>
+
+        </p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+        <button type="submit" class="waves-effect waves-green btn-flat" id="submit_report">Enviar</button>
+
+    </div>
+    </form>
+</div>
 
 <!-- Modal meus agendamentos Structure -->
 <div id="modalMeusAgendamentos" class="modal" style="width:100% !important; height: 85%;">
@@ -382,7 +449,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             <tr>
                 <th>Data</th>
                 <th>Horario</th>
-                <th>Laboratorio</th>
+                <th>Objeto</th>
                 <th>Ano</th>
                 <th>Curso</th>
                 <th>Estado</th>
@@ -412,7 +479,21 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     echo "<td>" . $arrayAgendamentos['ANO_CURSO'] . "</td>";
                     echo "<td>" . $arrayAgendamentos['CURSO'] . "</td>";
                     if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "confirmado") {
-                        echo "<td><i class='small material-icons green-text text-darken-2'>check</i></td>";
+                        echo "
+                                <!-- Modal cancelar agendamento Structure -->
+                                <div id=\"modalCancelAgend{$arrayAgendamentos['ID']}\" class=\"modal retorno\">
+                                    <div class=\"modal-content\">
+                                        <h4 class=\"cyan-text text-darken-1\">Cancelar agendamento</h4>
+                                        <p>Voce reamente deseja cancelar o agendamento selecionado ?
+                                        </p>
+                                    </div>
+                                    <div class=\"modal-footer\">
+                                        <a href=\"#!\" id=\"{$arrayAgendamentos['ID']}\" class=\"fechar_cancel waves-effect waves-red btn-flat\">Fechar</a>
+                                        <a href=\"#!\" class=\"cancelAgend waves-effect waves-green btn-flat\"  id=\"{$arrayAgendamentos['ID']}\">Confirmar</a>
+                                    </div>
+                                </div>
+                              ";
+                        echo "<td><i class='small material-icons green-text text-darken-2'><a class=' modal-trigger green-text text-darken-2'  href=\"#modalCancelAgend{$arrayAgendamentos['ID']}\">check</a></i></td>";
                     } else if ($arrayAgendamentos['ESTADO_AGENDAMENTO'] == "negado") {
                         echo "<td><i class='small material-icons red-text text-darken-2'>clear</i></td>";
                     } else {
@@ -446,12 +527,12 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
             <div class="row">
             <div class="input-field col s12">
                 <select name="select_feedback" form="form_feedback">
-                    <option value="nulo" selected>---</option>
+                    <option value="nulo" selected >---</option>
                     <option value="1">Ótimo, sem problemas durante o uso.</option>
                     <option value="2" >Mediano, alguns componentes estavam comprometidos.</option>
                     <option value="3">Ruim, o uso foi afetado negativamente.</option>
                 </select>
-                <label>Condição de uso do laboratório(Opcional)</label>
+                <label>Condição de uso (Opcional)</label>
             </div>
         </div>
         </div>
@@ -530,6 +611,11 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 window.history.pushState("", "", window.location.href.replace(/&pedido/g, ''));
             }
         });
+        $('#modalExitoCancel').modal({
+            onCloseEnd: function () {
+                location.reload();
+            }
+        });
 
 
 
@@ -541,6 +627,7 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
 
         var sessao_pedido = '<?=$_SESSION['retorno_pedido'] ?? '"nope"';?>';
         var sessao_retorno_feed = "<?=$_SESSION['retorno_feedback'] ?? 'nope';?>";
+        var sessao_retorno_report = "<?=$_SESSION['retorno_report'] ?? 'nope';?>";
 
         $('#modalErroPedido').modal();
         $('#modalExitoPedido').modal();
@@ -554,6 +641,20 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                 data: "name="+$(this).attr('id'),
                 success: function(data){
                     location.reload();
+                }
+            });
+        });
+        $('.cancelAgend').click(function () {
+
+            $.ajax({
+                url: "../../../libs/funcoes_php/DeleteAgendamento.php",
+                type: 'POST', //I want a type as POST
+                data: "name="+$(this).attr('id'),
+                success: function(data){
+                    var idfechar = '#modalCancelAgend'+data;
+                    $(idfechar).modal('close');
+                    $('#modalExitoCancel').modal('open');
+
                 }
             });
         });
@@ -579,7 +680,10 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     });
                 }, 500);
 
-
+        $('.fechar_cancel').click(function () {
+            var idfechar = '#modalCancelAgend'+$(this).attr('id');
+            $(idfechar).modal('close');
+        });
 
         if (sessao_pedido == "erro") {
             $('#modalErroPedido').modal('open');
@@ -597,6 +701,15 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
         else if (sessao_retorno_feed == "exito") {
             $('#modalExitoFeedback').modal('open');
             sessao_retorno_feed = null;
+        }
+
+        if (sessao_retorno_report == "erro") {
+            $('#modalErroReport').modal('open');
+            sessao_retorno_report = null;
+        }
+        else if (sessao_retorno_report== "exito") {
+            $('#modalExitoReport').modal('open');
+            sessao_retorno_report = null;
         }
 
         if (sessao_feed != "nope"){
@@ -694,6 +807,9 @@ if (isset($_SESSION['retorno_pedido'])) {
 }
 if(isset($_SESSION['retorno_feedback'])){
     unset($_SESSION['retorno_feedback']);
+}
+if(isset($_SESSION['retorno_report'])){
+    unset($_SESSION['retorno_report']);
 }
 if (isset($_SESSION['idAgenFeed'])) {
     unset($_SESSION['idAgenFeed']);

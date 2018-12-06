@@ -3000,7 +3000,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       key: "_handleFocus",
       value: function _handleFocus(e) {
         if (!this.el.contains(e.target)) {
-          this.el.focus();
+          //this.el.focus();
         }
       }
 
