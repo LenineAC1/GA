@@ -49,11 +49,11 @@ $users = getUser();
         <li class="center red darken-3">
         <a href="#"><img src="<?=$raiz?>/app/view/_img/logoGA.png" style="height: 50px;"></a>
         </li>
-        <li class="center">Controle de usuarios</li>
+        <li class="center"><i class="material-icons">how_to_reg</i> Controle de usuarios</li>
         <li><a href="?opc=1" id="" class="mudarOpc">CADASTRO DE USUARIOS</a></li>
         <!--<li><a href="?opc=2" id="" class="mudarOpc">GERENCIAMENTO DE USUARIOS</a></li>-->
         <div class="divider"></div>
-        <li class="center">Reclamações e BUGS</li>
+        <li class="center"><i class="material-icons">build</i> Reclamações e BUGS</li>
         <li><a href="?opc=3" id="" class="mudarOpc">SUGESTÕES</a></li>
         <li><a href="?opc=4" id="" class="mudarOpc">BUGS REPORTADOS</a></li>
         <!--BOTÃO DE SAIR-->

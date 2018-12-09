@@ -160,11 +160,11 @@ $arrayAgendamentos = getAgendamendos($_SESSION['session_login_id']); // Pega os 
                     echo "<h5>Escolha oque deseja agendar!</h5>";
 
                 } else {
-                    echo "<ul class='collapsible popout' data-collapsible='accordion'>
+                    echo "<ul class='collapsible popout some' data-collapsible='accordion'>
                     <li>
                     ";
-                    echo "<div class='collapsible-header center' style='display: block; font-size: 1.1vw'>".getNomeLabByID($_SESSION['id_lab'])."</div>";
-                    echo "<div class='collapsible-body' style='text-align: justify'>Condição de uso geral: ".getCondicaoFraseFeed(calcularMediaFeed($_SESSION['id_lab']))." <br><br>".getDescricaoByID($_SESSION['id_lab'])."</div>";
+                    echo "<div class='collapsible-header center some' style='display: block; font-size: 1.1vw'>".getNomeLabByID($_SESSION['id_lab'])."</div>";
+                    echo "<div class='collapsible-body some' style='text-align: justify'>Condição de uso geral: ".getCondicaoFraseFeed(calcularMediaFeed($_SESSION['id_lab']))." <br><br>".getDescricaoByID($_SESSION['id_lab'])."</div>";
                     echo "</li></ul>";
                 } ?>
             </div>

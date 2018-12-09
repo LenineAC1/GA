@@ -91,6 +91,10 @@ header, main, footer {
         font-size: 5vw;
     }
 
+    .some{
+        display: none;
+    }
+
     .fundo-row, .fundo-row2, .fundo-row3{
         padding: 0 !important;
         height: 100% !important;
